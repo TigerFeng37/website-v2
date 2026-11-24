@@ -15,6 +15,29 @@ import urbanscapeHero from "../assets/hero-webm/urbanscape-hero.mp4";
 import apexHero from "../assets/hero-webm/apex-hero.mp4";
 import humanLightHero from "../assets/hero-webm/humanlight-hero.mp4";
 
+// Card media: lightweight loops (1280px H.264) and posters (1600px WebP),
+// generated from the full-size heroes. Posters double as the still shown
+// under reduced motion and before a loop has loaded.
+import academyRecordsThumb from "../assets/thumbs/academy-records.mp4";
+import academyRecordsPoster from "../assets/thumbs/academy-records.webp";
+import altThumb from "../assets/thumbs/alt-site.webp";
+import apexThumb from "../assets/thumbs/apex.mp4";
+import apexPoster from "../assets/thumbs/apex.webp";
+import aspectaThumb from "../assets/thumbs/aspecta.mp4";
+import aspectaPoster from "../assets/thumbs/aspecta.webp";
+import eclairThumb from "../assets/thumbs/eclair.mp4";
+import eclairPoster from "../assets/thumbs/eclair.webp";
+import fengWorksThumb from "../assets/thumbs/feng-works.mp4";
+import fengWorksPoster from "../assets/thumbs/feng-works.webp";
+import humanLightThumb from "../assets/thumbs/human-light.mp4";
+import humanLightPoster from "../assets/thumbs/human-light.webp";
+import photosThumb from "../assets/thumbs/photos-by-feng.webp";
+import pixstudioThumb from "../assets/thumbs/pixstudio.webp";
+import trackmapThumb from "../assets/thumbs/tokyo-trackmap.mp4";
+import trackmapPoster from "../assets/thumbs/tokyo-trackmap.webp";
+import urbanscapeThumb from "../assets/thumbs/urbanscape.mp4";
+import urbanscapePoster from "../assets/thumbs/urbanscape.webp";
+
 /** Filter groups on the work index. A project can sit in more than one. */
 export const CATEGORIES = ["Product", "Brand", "Photography"];
 
@@ -28,6 +51,7 @@ export const projects = [
     disciplines: ["Product design", "iOS development", "Cartography"],
     year: "2026",
     hero: nysdaHero,
+    thumb: nysdaHero,
     summary:
       "A native iOS app that maps what the subway left behind: ghost stations, hidden platforms, unused tunnels, elevated remnants and the architecture still standing above it all.",
   },
@@ -40,6 +64,7 @@ export const projects = [
     disciplines: ["Product design", "Creative technology", "Photography"],
     year: "2026",
     hero: photosByFengHero,
+    thumb: photosThumb,
     summary:
       "A street-photography archive indexed by where and when — a map and a time-aware gallery over one body of work.",
   },
@@ -53,6 +78,7 @@ export const projects = [
     award: "First place, v0 × Contra Hackathon",
     year: "2026",
     hero: altHero,
+    thumb: altThumb,
     summary:
       "A speed-built landing page exploring a new navigation interaction, prototyped and shipped in a single timed session with v0.",
   },
@@ -65,6 +91,7 @@ export const projects = [
     disciplines: ["Product design", "Design system", "User testing"],
     year: "2024",
     hero: pixstudioHero,
+    thumb: pixstudioThumb,
     summary:
       "A zero-to-one, AI-assisted creation suite for webtoon and manga artists, adopted by two professional studios.",
   },
@@ -77,6 +104,8 @@ export const projects = [
     disciplines: ["Identity", "Typeface design"],
     year: "2022",
     hero: aspectaHero,
+    thumb: aspectaThumb,
+    poster: aspectaPoster,
     summary:
       "A minimalist identity and proprietary display typeface for Aspecta, built on proportion and the harmony of human connection.",
   },
@@ -89,6 +118,8 @@ export const projects = [
     disciplines: ["Identity", "Web design"],
     year: "2023",
     hero: academyRecordsHero,
+    thumb: academyRecordsThumb,
+    poster: academyRecordsPoster,
     summary:
       "A complete brand identity for Academy Records: modern design with vintage, vinyl-era influences.",
   },
@@ -101,6 +132,8 @@ export const projects = [
     disciplines: ["Cartography", "Identity", "Web design"],
     year: "2023",
     hero: trackmapHero,
+    thumb: trackmapThumb,
+    poster: trackmapPoster,
     summary:
       "A geographically accurate map of Tokyo's rail network that stays as easy to read as a schematic.",
   },
@@ -113,6 +146,8 @@ export const projects = [
     disciplines: ["Identity", "Motion"],
     year: "2022",
     hero: eclairHero,
+    thumb: eclairThumb,
+    poster: eclairPoster,
     summary:
       "Visual identity for an incentive platform that helps social caregivers set and reach performance goals.",
   },
@@ -125,6 +160,8 @@ export const projects = [
     disciplines: ["Identity", "Web design", "Motion"],
     year: "2025",
     hero: fengWorksHero,
+    thumb: fengWorksThumb,
+    poster: fengWorksPoster,
     summary:
       "Identity, motion and website for feng.works, a one-person design practice working across brand and product.",
   },
@@ -137,6 +174,8 @@ export const projects = [
     disciplines: ["Identity", "Web design", "Photography"],
     year: "2025",
     hero: urbanscapeHero,
+    thumb: urbanscapeThumb,
+    poster: urbanscapePoster,
     summary:
       "An identity and online home for photography of everyday city life, built around the proofreader's caret.",
   },
@@ -150,6 +189,8 @@ export const projects = [
     award: "A' Design Award",
     year: "2020",
     hero: apexHero,
+    thumb: apexThumb,
+    poster: apexPoster,
     summary:
       "A landscape series on the order and chaos in mountain forms. A' Design Award winner.",
   },
@@ -163,6 +204,8 @@ export const projects = [
     award: "A' Design Award",
     year: "2018",
     hero: humanLightHero,
+    thumb: humanLightThumb,
+    poster: humanLightPoster,
     summary:
       "A minimalist architectural series shot inside the Pinakothek der Moderne. A' Design Award winner.",
   },
@@ -170,8 +213,8 @@ export const projects = [
 
 /** Work that exists but can't be shown yet. Listed, never linked. */
 export const inProgress = [
-  { title: "Untitled", note: "Agentic AI product", disciplines: ["Product design"] },
-  { title: "Untitled", note: "Consumer app", disciplines: ["Product design", "App development"] },
+  { title: "Untitled", note: "Agentic AI product", phrase: "an agentic AI product", disciplines: ["Product design"] },
+  { title: "Untitled", note: "Consumer app", phrase: "a consumer app", disciplines: ["Product design", "App development"] },
 ];
 
 export const getProject = (slug) => projects.find((p) => p.slug === slug);

@@ -287,6 +287,18 @@
   animation-delay: calc(820ms + var(--i, 0) * 80ms);
 }
 
+/* Work grid cards: a slow push-in on hover */
+.card .media > img,
+.card .media > video {
+  transition: transform 1.1s var(--ease-out), opacity var(--dur-slow) var(--ease-out);
+}
+@media (hover: hover) {
+  .card:hover .media > img,
+  .card:hover .media > video {
+    transform: scale(1.03);
+  }
+}
+
 /* Work index */
 .index-row {
   animation: intro-rise 0.9s var(--ease-out) both;

@@ -33,7 +33,10 @@ function Media({
   const ref = useRef(null);
   const videoRef = useRef(null);
   const reduced = useReducedMotion();
-  const video = isVideo(src);
+  // Under reduced motion a decorative loop is just its poster: no download.
+  const stillOnly = isVideo(src) && reduced && !controls && Boolean(poster);
+  const video = isVideo(src) && !stillOnly;
+  if (stillOnly) src = poster;
   const [loaded, setLoaded] = useState(false);
   const [near, setNear] = useState(priority);
   const [visible, setVisible] = useState(false);
