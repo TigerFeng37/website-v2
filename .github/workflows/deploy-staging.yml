@@ -1,0 +1,55 @@
+# Builds v3-beta and publishes it to the `staging` branch of the feng-works
+# Cloudflare Pages project (https://staging.feng.works). Production is untouched.
+#
+# Needs one repository secret: CLOUDFLARE_API_TOKEN, with
+# Account › Cloudflare Pages › Edit. Until it exists the job skips the deploy.
+name: Deploy staging
+
+on:
+  push:
+    branches: [v3-beta]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Check for deploy token
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::notice::CLOUDFLARE_API_TOKEN is not set; skipping the staging deploy."
+
+      - uses: actions/checkout@v4
+        if: env.CLOUDFLARE_API_TOKEN != ''
+
+      - uses: actions/setup-node@v4
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: yarn build
+
+      - name: Deploy to Cloudflare Pages (staging)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: >
+          npx wrangler pages deploy dist
+          --project-name feng-works
+          --branch staging
+          --commit-hash "${{ github.sha }}"
+          --commit-message "$(git log -1 --pretty=%s)"
+          --commit-dirty=false
