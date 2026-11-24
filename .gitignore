@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.gstack/
+
+# OS thumbnail caches
+Thumbs.db

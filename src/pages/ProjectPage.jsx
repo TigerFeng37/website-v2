@@ -1,12 +1,19 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import hero1 from "../assets/Academy-Records-Hero.png";
-import hero2 from "../assets/Tokyo-Trackmap-Hero.png";
-import hero3 from "../assets/Aspecta-Hero.png";
-import hero4 from "../assets/Eclair-Hero.png";
+import hero1 from "../assets/Academy-Records-Hero.webp";
+import hero2 from "../assets/Tokyo-Trackmap-Hero.webp";
+import hero3 from "../assets/Aspecta-Hero.webp";
+import hero4 from "../assets/Eclair-Hero.webp";
 
 const projectsData = {
+  "aspecta": {
+    title: "ASPECTA",
+    type: "BRAND DESIGN",
+    image: hero3,
+    description: "A brand identity system for Aspecta, focusing on geometric forms and harmonious proportions.",
+    // Add more details for this project
+  },
   "academy-records": {
     title: "ACADEMY RECORDS",
     type: "BRAND DESIGN",
@@ -19,13 +26,6 @@ const projectsData = {
     type: "DESIGN EXPERIMENT",
     image: hero2,
     description: "An experimental mapping project visualizing Tokyo's complex railway system.",
-    // Add more details for this project
-  },
-  "aspecta": {
-    title: "ASPECTA",
-    type: "BRAND DESIGN",
-    image: hero3,
-    description: "A brand identity system for Aspecta, focusing on geometric forms and harmonious proportions.",
     // Add more details for this project
   },
   "eclair": {
@@ -59,10 +59,10 @@ function ProjectPage() {
   }
 
   return (
-    <div className="py-24 px-8 max-w-6xl mx-auto">
+    <div className="my-12 px-8 max-w-6xl mx-auto">
       <button 
         onClick={() => navigate('/')}
-        className="mb-8 flex items-center text-[#72EAE0] hover:underline"
+        className="mb-8 flex items-start text-[#72EAE0] hover:underline"
       >
         <span className="mr-2">←</span> Back to projects
       </button>

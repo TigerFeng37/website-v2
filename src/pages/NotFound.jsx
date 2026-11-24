@@ -1,22 +1,29 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Seo from "../components/Seo";
 
 function NotFound() {
-  const navigate = useNavigate();
-  
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold mb-4">Page not found</h2>
-        <button 
-          onClick={() => navigate('/')}
-          className="px-4 py-2 bg-[#72EAE0] text-black rounded hover:bg-teal-300"
+    <div className="flex items-center min-h-screen px-6 md:px-8 max-w-6xl mx-auto">
+      <Seo title="Page not found" />
+      <div>
+        <p className="font-mono text-sm tracking-widest text-[#72EAE0] mb-4">ERROR 404</p>
+        <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-6">
+          This page doesn't exist.
+        </h1>
+        <p className="text-lg text-gray-400 mb-10 max-w-xl">
+          The link may be out of date, or the project may have moved.
+        </p>
+        <Link
+          to="/#works"
+          className="group inline-flex items-center gap-3 px-5 py-3 bg-[#72EAE0] text-black rounded transition-colors hover:bg-white"
         >
-          Back to Home
-        </button>
+          See all work
+          <span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden>→</span>
+        </Link>
       </div>
     </div>
   );
 }
 
-export default NotFound; 
+export default NotFound;

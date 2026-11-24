@@ -1,92 +1,97 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
-function GridItem({ imageUrl, projectName, projectType, onClick }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [skewValues, setSkewValues] = useState({ x: 0, y: 0 });
-  const [lightPosition, setLightPosition] = useState({ x: 50, y: 50 }); // Default center position (50%)
-  const itemRef = useRef(null);
-  
-  const handleMouseMove = (e) => {
-    if (!itemRef.current || !isHovered) return;
-    
-    // Get the bounding rectangle of the item
-    const rect = itemRef.current.getBoundingClientRect();
-    
-    // Calculate mouse position relative to the center of the item
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    // Calculate the distance from center as a percentage (-1 to 1)
-    const relativeX = (e.clientX - centerX) / (rect.width / 2);
-    const relativeY = (e.clientY - centerY) / (rect.height / 2);
-    
-    // Apply a subtle skew based on mouse position
-    setSkewValues({
-      x: relativeY * 0.5, // Skew X based on vertical position
-      y: -relativeX * 0.5  // Skew Y based on horizontal position
-    });
-    
-    // Calculate light position (0-100%)
-    const lightX = ((e.clientX - rect.left) / rect.width) * 100;
-    const lightY = ((e.clientY - rect.top) / rect.height) * 100;
-    setLightPosition({ x: lightX, y: lightY });
-  };
-  
-  const resetEffects = () => {
-    setSkewValues({ x: 0, y: 0 });
-    setLightPosition({ x: 50, y: 50 });
-  };
-  
-  // Clean up the event listener when component unmounts
+const isVideoUrl = (url) => /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(String(url ?? ""));
+
+/** Plays a muted loop only while it is on screen. */
+function InViewVideo({ src }) {
+  const ref = useRef(null);
+
   useEffect(() => {
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    const video = ref.current;
+    if (!video || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
   }, []);
-  
+
   return (
-    <div 
-      ref={itemRef}
-      className="flex flex-col items-start justify-start h-[30rem] w-[30rem] mb-4 group cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        resetEffects();
-      }}
-      onMouseMove={handleMouseMove}
-      onClick={onClick}
-    >
-      <div 
-        className="w-full h-full mb-3 rounded-lg overflow-hidden transition-all duration-300 ease-in-out transform group-hover:scale-[0.98] group-active:scale-95 relative"
-        style={{
-          backgroundImage: `url(${imageUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          transform: isHovered ? `skew(${skewValues.x}deg, ${skewValues.y}deg)` : 'skew(0deg, 0deg)',
-          transition: 'transform 0.15s ease-out'
-        }}
-      >
-        {/* Dynamic light/shadow overlay */}
-        <div 
-          className="absolute inset-0 rounded-lg transition-opacity duration-300"
-          style={{
-            opacity: isHovered ? 0.4 : 0,
-            background: isHovered ? 
-              `radial-gradient(circle at ${lightPosition.x}% ${lightPosition.y}%, rgba(255,255,255,0.8) 0%, rgba(0,0,0,0.5) 100%)` : 
-              'none',
-            mixBlendMode: 'overlay',
-            pointerEvents: 'none' // Make the overlay non-interactive
-          }}
-        ></div>
-      </div>
-      <span className="text-lg font-bold mb-[-5px]">
-        {projectName} <span className="transition-all duration-300 ease-in-out group-hover:text-[#72EAE0] group-hover:translate-x-2 inline-block">→</span>
-      </span>
-      <span className="text-lg font-bold text-gray-500 transition-all duration-300 ease-in-out group-hover:text-gray-400">
-        {projectType}
-      </span>
-    </div>
+    <video
+      ref={ref}
+      src={src}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-hidden
+      className="w-full h-full object-cover"
+    />
   );
 }
 
-export default GridItem; 
+function GridItem({ project }) {
+  const { slug, hero, title, disciplines, year, comingSoon } = project;
+
+  const media = (
+    <div className="relative w-full h-full mb-3 rounded-lg overflow-hidden bg-gray-900 transition-transform duration-500 ease-out group-hover:scale-[1.01] group-active:scale-[0.99]">
+      {isVideoUrl(hero) ? (
+        <InViewVideo src={hero} />
+      ) : (
+        <img src={hero} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
+      )}
+      {comingSoon ? (
+        <span className="absolute top-4 left-4 rounded-full bg-black/60 backdrop-blur px-3 py-1 text-xs tracking-widest uppercase text-white/80">
+          Coming soon
+        </span>
+      ) : null}
+    </div>
+  );
+
+  const meta = (
+    <div className="flex w-full items-start justify-between gap-6">
+      <div className="flex flex-col">
+        <span className="text-lg font-medium uppercase">
+          {title}
+          {!comingSoon ? (
+            <span
+              className="ml-2 inline-block transition-all duration-300 ease-out group-hover:text-[#72EAE0] group-hover:translate-x-2"
+              aria-hidden
+            >
+              →
+            </span>
+          ) : null}
+        </span>
+        <span className="text-lg font-light uppercase text-gray-500 transition-colors duration-300 group-hover:text-gray-400">
+          {disciplines.join(" · ")}
+        </span>
+      </div>
+      <span className="text-lg font-light text-gray-500 tabular-nums whitespace-nowrap">{year}</span>
+    </div>
+  );
+
+  const shell = "flex flex-col items-start justify-start h-[80vh] md:h-[30rem] w-full mb-4 group";
+
+  if (comingSoon) {
+    return (
+      <div className={`${shell} cursor-default`} aria-label={`${title} — coming soon`}>
+        {media}
+        {meta}
+      </div>
+    );
+  }
+
+  return (
+    <Link to={`/works/${slug}`} className={shell}>
+      {media}
+      {meta}
+    </Link>
+  );
+}
+
+export default GridItem;

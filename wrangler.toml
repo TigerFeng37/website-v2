@@ -1,0 +1,7 @@
+# Cloudflare Pages — https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+# Set `name` to your Pages project name in the dashboard (or create it on first deploy).
+"$schema" = "./node_modules/wrangler/config-schema.json"
+
+name = "feng-works"
+pages_build_output_dir = "./dist"
+compatibility_date = "2025-05-16"

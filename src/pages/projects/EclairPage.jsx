@@ -1,67 +1,102 @@
 import React from "react";
-import BackButton from "../../components/BackButton";
-import hero4 from "../../assets/Eclair-Hero.png";
+import CaseStudy from "../../components/case-study/CaseStudy";
+import ProjectDetails from "../../components/case-study/ProjectDetails";
+import logoAnim from "../../assets/eclair/logo-anim.mp4";
+import conceptAnim from "../../assets/eclair/concept-anim.mp4";
+import demo0 from "../../assets/eclair/demo-0.png";
+import demo1 from "../../assets/eclair/demo-1.webp";
+import demo3 from "../../assets/eclair/demo-3.webp";
 
 function EclairPage() {
   return (
-    <div className="py-24 px-8 max-w-6xl mx-auto">
-      <BackButton />
-      
-      {/* Full-width hero layout */}
-      <div className="mb-12 rounded-lg overflow-hidden">
-        <img src={hero4} alt="Eclair" className="w-full" />
+    <CaseStudy
+      slug="eclair"
+      intro="Eclair Labs is an interactive platform that helps social caregivers define performance goals within an incentive system."
+    >
+      <div className="mb-16 flex justify-center animate-on-scroll image-fade stagger-2">
+        <video
+          className="w-full md:w-1/2 aspect-video object-cover rounded-lg"
+          autoPlay
+          muted
+          playsInline
+          aria-label="Eclair Labs logo animation"
+        >
+          <source src={logoAnim} type="video/mp4" />
+        </video>
       </div>
-      
-      <div className="text-center mb-16">
-        <h1 className="text-6xl font-['IBM_Plex_Sans'] font-medium mb-2">ECLAIR</h1>
-        <p className="text-xl text-gray-400">BRAND DESIGN</p>
+
+      <div className="flex justify-center mb-16 animate-on-scroll image-fade">
+        <img
+          src={demo0}
+          alt="Eclair Labs logotype and brand mark"
+          className="w-full md:w-[70%] md:aspect-video object-contain md:object-cover rounded-lg"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
-      
-      <div className="max-w-3xl mx-auto mb-20">
-        <p className="text-xl text-gray-300 leading-relaxed">
-          Eclair is a premium pastry brand that combines French tradition with modern aesthetics.
-          The branding emphasizes lightness, sweetness, and artisanal craftsmanship through a
-          sophisticated visual language.
-        </p>
+
+      <div className="mb-16 -mt-8 md:-mt-20 md:mx-8 animate-on-scroll image-fade stagger-2">
+        <video
+          className="w-full aspect-square md:aspect-[21/9] object-cover rounded-lg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-label="Eclair Labs concept animation"
+        >
+          <source src={conceptAnim} type="video/mp4" />
+        </video>
       </div>
-      
-      {/* Project-specific gallery layout */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-        <div className="aspect-square bg-gray-800 rounded-lg"></div>
-        <div className="aspect-square bg-gray-800 rounded-lg"></div>
-        <div className="aspect-square bg-gray-800 rounded-lg"></div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-        <div>
-          <h2 className="text-2xl font-medium mb-4">Brand Story</h2>
+
+      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="animate-on-scroll text-slide">
+          <h2 className="text-2xl font-medium mb-6">Brand philosophy</h2>
           <p className="text-lg text-gray-300">
-            The Eclair brand tells a story of tradition meeting innovation. The name not only
-            references the delicious French pastry but also means "flash of light" in French,
-            informing the brand's visual identity with elements of brightness and illumination.
+            An éclair is a pastry, and the French word for lightning. Eclair Labs
+            believes work engagement should feel the same way: fast and sweet.
           </p>
         </div>
-        <div>
-          <h2 className="text-2xl font-medium mb-4">Typography</h2>
+      </div>
+
+      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="animate-on-scroll text-slide stagger-1">
+          <h2 className="text-2xl font-medium mb-6">Design objective</h2>
           <p className="text-lg text-gray-300">
-            A custom serif typeface was developed for Eclair, featuring delicate terminals and
-            subtle curves that echo the craftsmanship found in their pastries. The type system
-            balances elegance with readability across all brand applications.
+            We set out to build the Eclair Labs visual identity system: a cohesive
+            brand aligned with the company's product and philosophy.
+          </p>
+        </div>
+        <div className="animate-on-scroll text-slide stagger-2">
+          <h2 className="text-2xl font-medium mb-6">Core concepts</h2>
+          <p className="text-lg text-gray-300">
+            To reflect the product's motivational side and the humanistic nature of
+            care work, we broke Eclair's brand culture into modular components. That
+            approach runs from the brand keywords through to the graphics themselves.
           </p>
         </div>
       </div>
-      
-      <div className="flex justify-between items-center bg-gray-900 p-6 rounded-lg">
-        <div>
-          <h3 className="text-xl font-medium mb-2">Project Details</h3>
-          <p className="text-gray-400">Brand Identity for Premium Pastry Shop, 2024</p>
-        </div>
-        <button className="px-6 py-3 bg-[#72EAE0] text-black rounded hover:bg-teal-300">
-          View Case Study
-        </button>
+
+      <div className="mb-16 space-y-6">
+        {[
+          { src: demo3, alt: "Eclair Labs brand graphics" },
+          { src: demo1, alt: "Eclair Labs identity applications" },
+        ].map((img) => (
+          <figure key={img.src} className="aspect-square md:aspect-[16/10] rounded-lg overflow-hidden animate-on-scroll image-fade">
+            <img src={img.src} alt={img.alt} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+          </figure>
+        ))}
       </div>
-    </div>
+
+      <ProjectDetails
+        items={[
+          { label: "Client", value: "Eclair Labs" },
+          { label: "Year", value: "2022" },
+          { label: "Team", value: "Fusor Design Labs" },
+          { label: "Scope", value: ["Visual identity", "Typography"] },
+        ]}
+      />
+    </CaseStudy>
   );
 }
 
-export default EclairPage; 
+export default EclairPage;

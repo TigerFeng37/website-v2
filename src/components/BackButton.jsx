@@ -1,17 +1,18 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function BackButton() {
-  const navigate = useNavigate();
-  
   return (
-    <button 
-      onClick={() => navigate('/')}
-      className="mb-8 flex items-center text-[#72EAE0] hover:text-[#72EAE0]/80 transition-all duration-300"
+    <Link
+      to="/#works"
+      className="group inline-flex items-center gap-2 text-sm tracking-wide uppercase text-[#72EAE0] hover:text-white transition-colors duration-300"
     >
-      <span className="mr-2">←</span> Back to projects
-    </button>
+      <span className="transition-transform duration-300 group-hover:-translate-x-1" aria-hidden>
+        ←
+      </span>
+      All work
+    </Link>
   );
 }
 
-export default BackButton; 
+export default BackButton;
