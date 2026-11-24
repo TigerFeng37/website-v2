@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Seo from "../Seo";
 import BackButton from "../BackButton";
 import useReveal from "./useReveal";
+import useLegacyDark from "../../hooks/useLegacyDark";
 import { getProject, getNextProject } from "../../data/projects";
 
 /**
@@ -17,6 +18,7 @@ function CaseStudy({ slug, intro, quote = false, children }) {
   const project = getProject(slug);
   const next = getNextProject(slug);
   useReveal(rootRef);
+  useLegacyDark();
 
   return (
     <article ref={rootRef} className="pt-24 pb-16 px-6 md:px-8 max-w-6xl mx-auto">
@@ -42,7 +44,7 @@ function CaseStudy({ slug, intro, quote = false, children }) {
       {children}
 
       <nav aria-label="Next project" className="mt-24 border-t border-white/10 pt-8">
-        <Link to={`/works/${next.slug}`} className="group flex flex-col gap-2">
+        <Link to={`/works/${next.slug}`} viewTransition className="group flex flex-col gap-2">
           <span className="text-xs tracking-widest text-gray-500 uppercase">Next project</span>
           <span className="flex items-baseline justify-between gap-6">
             <span className="text-3xl md:text-5xl font-light uppercase tracking-tight transition-colors group-hover:text-[#72EAE0]">

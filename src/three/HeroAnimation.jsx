@@ -4,7 +4,6 @@ import { useRef, useReducer, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, MeshTransmissionMaterial, Environment, Lightformer } from '@react-three/drei'
 import { CuboidCollider, BallCollider, Physics, RigidBody, useBeforePhysicsStep } from '@react-three/rapier'
-import { EffectComposer, DepthOfField } from '@react-three/postprocessing'
 import { easing } from 'maath'
 
 // const accents = ['#4060ff', '#20ffa0', '#ff4060', '#ffcc00']

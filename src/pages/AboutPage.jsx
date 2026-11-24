@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Seo from "../components/Seo";
+import useLegacyDark from "../hooks/useLegacyDark";
 import Logo from "../assets/logo-feng.svg";
 import aboutHero from "../assets/about-hero.mp4";
 import severed from "../assets/severed.webp";
@@ -98,6 +99,7 @@ const isTouch = () =>
 
 function AboutPage() {
   const heroRef = useRef(null);
+  useLegacyDark();
   const [touch] = useState(isTouch);
   const [smallScreen, setSmallScreen] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 768

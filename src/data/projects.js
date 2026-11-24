@@ -1,11 +1,10 @@
-// Single source of truth for the work index and every case-study header.
-// Order here is the order on the home grid and the "Next project" sequence.
+// Single source of truth for the work index, the home grid and every
+// case-study header. Order here is the order on the site and the order of
+// the "Next project" hand-off.
 
 import nysdaHero from "../assets/nysda/map-hero.svg";
 import { photosByFengHero } from "../assets/photos-by-feng";
 import altHero from "../assets/alt-page/hero.png";
-import stealthHero1 from "../assets/wip-placeholder.webp";
-import stealthHero2 from "../assets/wip-placeholder-2.webp";
 import pixstudioHero from "../assets/pixstudio/hero.png";
 import aspectaHero from "../assets/hero-webm/aspecta-hero.mp4";
 import eclairHero from "../assets/hero-webm/eclair-hero.mp4";
@@ -16,11 +15,17 @@ import urbanscapeHero from "../assets/hero-webm/urbanscape-hero.mp4";
 import apexHero from "../assets/hero-webm/apex-hero.mp4";
 import humanLightHero from "../assets/hero-webm/humanlight-hero.mp4";
 
+/** Filter groups on the work index. A project can sit in more than one. */
+export const CATEGORIES = ["Product", "Brand", "Photography"];
+
 export const projects = [
   {
     slug: "nyc-subway-archive",
     title: "NYC Subway Digital Archive",
-    disciplines: ["UI/UX Design", "iOS Development", "Cartography"],
+    tagline: "A native iOS field guide to the ghost stations and hidden remnants of the New York subway.",
+    client: "Personal",
+    categories: ["Product"],
+    disciplines: ["Product design", "iOS development", "Cartography"],
     year: "2026",
     hero: nysdaHero,
     summary:
@@ -29,7 +34,10 @@ export const projects = [
   {
     slug: "photos-by-feng",
     title: "Photos by Feng",
-    disciplines: ["UI/UX Design", "Creative Technology", "Photography"],
+    tagline: "A street photography archive you can read by where and when each frame was taken.",
+    client: "Personal",
+    categories: ["Product", "Photography"],
+    disciplines: ["Product design", "Creative technology", "Photography"],
     year: "2026",
     hero: photosByFengHero,
     summary:
@@ -38,59 +46,47 @@ export const projects = [
   {
     slug: "alt-site",
     title: "alt · site",
-    disciplines: ["UI/UX Design", "v0 × Contra Hackathon — First Place"],
+    tagline: "A new navigation interaction, prototyped and shipped in one timed session. First place.",
+    client: "v0 × Contra Hackathon",
+    categories: ["Product"],
+    disciplines: ["Interaction design", "Prototyping"],
+    award: "First place, v0 × Contra Hackathon",
     year: "2026",
     hero: altHero,
     summary:
       "A speed-built landing page exploring a new navigation interaction, prototyped and shipped in a single timed session with v0.",
   },
   {
-    slug: "stealth-agentic",
-    title: "Stealth Project",
-    disciplines: ["UI/UX Design", "Agentic AI"],
-    year: "In progress",
-    hero: stealthHero1,
-    comingSoon: true,
-  },
-  {
     slug: "pixstudio",
     title: "PixStudio",
-    disciplines: ["UI/UX Design", "User Testing"],
+    tagline: "An AI-assisted creation suite for webtoon and manga artists, adopted by two studios.",
+    client: "Mewtant",
+    categories: ["Product"],
+    disciplines: ["Product design", "Design system", "User testing"],
     year: "2024",
     hero: pixstudioHero,
     summary:
       "A zero-to-one, AI-assisted creation suite for webtoon and manga artists, adopted by two professional studios.",
   },
   {
-    slug: "stealth-app",
-    title: "Stealth Project",
-    disciplines: ["UI/UX Design", "App Development"],
-    year: "In progress",
-    hero: stealthHero2,
-    comingSoon: true,
-  },
-  {
     slug: "aspecta",
     title: "Aspecta.ai",
-    disciplines: ["Branding", "Typography"],
+    tagline: "A minimalist identity and a proprietary display typeface, built on proportion.",
+    client: "Aspecta",
+    categories: ["Brand"],
+    disciplines: ["Identity", "Typeface design"],
     year: "2022",
     hero: aspectaHero,
     summary:
       "A minimalist identity and proprietary display typeface for Aspecta, built on proportion and the harmony of human connection.",
   },
   {
-    slug: "eclair",
-    title: "Eclair Labs",
-    disciplines: ["Branding", "Visual Identity"],
-    year: "2022",
-    hero: eclairHero,
-    summary:
-      "Visual identity for an incentive platform that helps social caregivers set and reach performance goals.",
-  },
-  {
     slug: "academy-records",
     title: "Academy Records",
-    disciplines: ["Branding", "Web Design"],
+    tagline: "A record label identity with vinyl-era roots and a contemporary voice.",
+    client: "Academy Records",
+    categories: ["Brand"],
+    disciplines: ["Identity", "Web design"],
     year: "2023",
     hero: academyRecordsHero,
     summary:
@@ -99,16 +95,34 @@ export const projects = [
   {
     slug: "tokyo-trackmap",
     title: "Tokyo Trackmap",
-    disciplines: ["Cartography", "Branding", "Web Design"],
+    tagline: "Tokyo's rail network, geographically accurate and as easy to read as a schematic.",
+    client: "Personal",
+    categories: ["Brand"],
+    disciplines: ["Cartography", "Identity", "Web design"],
     year: "2023",
     hero: trackmapHero,
     summary:
       "A geographically accurate map of Tokyo's rail network that stays as easy to read as a schematic.",
   },
   {
+    slug: "eclair",
+    title: "Eclair Labs",
+    tagline: "Visual identity for an incentive platform that helps social caregivers reach their goals.",
+    client: "Eclair Labs",
+    categories: ["Brand"],
+    disciplines: ["Identity", "Motion"],
+    year: "2022",
+    hero: eclairHero,
+    summary:
+      "Visual identity for an incentive platform that helps social caregivers set and reach performance goals.",
+  },
+  {
     slug: "feng-works",
     title: "feng.works",
-    disciplines: ["Branding", "Web Design", "Motion"],
+    tagline: "Identity, motion and website for a one-person practice across brand and product.",
+    client: "Feng Works",
+    categories: ["Brand"],
+    disciplines: ["Identity", "Web design", "Motion"],
     year: "2025",
     hero: fengWorksHero,
     summary:
@@ -117,7 +131,10 @@ export const projects = [
   {
     slug: "urbanscape",
     title: "Urbanscape",
-    disciplines: ["Branding", "Web Design", "Photography"],
+    tagline: "An identity and online home for photographs of everyday city life.",
+    client: "Urbanscape",
+    categories: ["Brand", "Photography"],
+    disciplines: ["Identity", "Web design", "Photography"],
     year: "2025",
     hero: urbanscapeHero,
     summary:
@@ -126,7 +143,11 @@ export const projects = [
   {
     slug: "apex",
     title: "Apex",
-    disciplines: ["Fine Art Photography"],
+    tagline: "A landscape series on order and chaos in mountain forms.",
+    client: "Personal",
+    categories: ["Photography"],
+    disciplines: ["Fine art photography"],
+    award: "A' Design Award",
     year: "2020",
     hero: apexHero,
     summary:
@@ -135,7 +156,11 @@ export const projects = [
   {
     slug: "human-light",
     title: "Human Light",
-    disciplines: ["Fine Art Photography"],
+    tagline: "A minimalist architectural series shot inside the Pinakothek der Moderne.",
+    client: "Personal",
+    categories: ["Photography"],
+    disciplines: ["Fine art photography"],
+    award: "A' Design Award",
     year: "2018",
     hero: humanLightHero,
     summary:
@@ -143,11 +168,16 @@ export const projects = [
   },
 ];
 
+/** Work that exists but can't be shown yet. Listed, never linked. */
+export const inProgress = [
+  { title: "Untitled", note: "Agentic AI product", disciplines: ["Product design"] },
+  { title: "Untitled", note: "Consumer app", disciplines: ["Product design", "App development"] },
+];
+
 export const getProject = (slug) => projects.find((p) => p.slug === slug);
 
-/** The next published project after `slug`, wrapping to the start. */
+/** The next project after `slug`, wrapping to the start. */
 export const getNextProject = (slug) => {
-  const published = projects.filter((p) => !p.comingSoon);
-  const i = published.findIndex((p) => p.slug === slug);
-  return published[(i + 1) % published.length];
+  const i = projects.findIndex((p) => p.slug === slug);
+  return projects[(i + 1) % projects.length];
 };

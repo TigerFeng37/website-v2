@@ -1,81 +1,59 @@
 /** @type {import('tailwindcss').Config} */
+
+// Every color is a CSS variable holding RGB channels (see src/index.css), so
+// utilities follow the active theme and still accept opacity: `bg-fg/10`.
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        'mono': ['IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+      colors: {
+        bg: v("bg"),
+        "bg-2": v("bg-2"),
+        fg: v("fg"),
+        "fg-2": v("fg-2"),
+        "fg-3": v("fg-3"),
+        line: v("line"),
+        accent: v("accent"),
+        "accent-ink": v("accent-ink"),
       },
-      fontWeight: {
-        'ultralight': '100',
-        'light': '300',
-        'normal': '400',
-        'medium': '500',
-        'semibold': '600',
-        'bold': '700',
+      fontFamily: {
+        sans: ['"Mona Sans Variable"', "ui-sans-serif", "system-ui", "sans-serif"],
+      },
+      // One fluid scale. Nothing on the site is set smaller than `small` (15px).
+      fontSize: {
+        display: ["var(--fs-display)", { lineHeight: "0.96", letterSpacing: "-0.045em" }],
+        h1: ["var(--fs-1)", { lineHeight: "1", letterSpacing: "-0.04em" }],
+        h2: ["var(--fs-2)", { lineHeight: "1.06", letterSpacing: "-0.032em" }],
+        h3: ["var(--fs-3)", { lineHeight: "1.18", letterSpacing: "-0.022em" }],
+        h4: ["var(--fs-4)", { lineHeight: "1.3", letterSpacing: "-0.012em" }],
+        body: ["var(--fs-body)", { lineHeight: "1.55", letterSpacing: "-0.004em" }],
+        small: ["var(--fs-small)", { lineHeight: "1.45", letterSpacing: "0" }],
+      },
+      spacing: {
+        gutter: "var(--gutter)",
+        gap: "var(--gap)",
+        section: "var(--section)",
+        header: "var(--header-h)",
+      },
+      maxWidth: {
+        site: "var(--max)",
+        measure: "38rem",
+      },
+      borderRadius: {
+        media: "var(--radius)",
       },
       transitionTimingFunction: {
-        'elastic': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-        'out-elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        out: "var(--ease-out)",
+        "in-out": "var(--ease-in-out)",
       },
-      keyframes: {
-        'blur-pulse': {
-          '25%': { filter: 'blur(3px)' },
-          '100%': { filter: 'blur(0px)' }
-        },
-        'hover-ripple': {
-          '50%': { backgroundColor: 'rgba(255, 255, 255, 0.25)' },
-          '100%': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }
-        },
-        'glow-drift-1': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '25%': { transform: 'translate(12px, -8px) scale(1.1)' },
-          '50%': { transform: 'translate(-6px, 14px) scale(0.95)' },
-          '75%': { transform: 'translate(-14px, -4px) scale(1.05)' },
-        },
-        'glow-drift-2': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '25%': { transform: 'translate(-10px, 12px) scale(1.08)' },
-          '50%': { transform: 'translate(8px, -10px) scale(0.92)' },
-          '75%': { transform: 'translate(14px, 6px) scale(1.12)' },
-        },
-        'glow-drift-3': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '25%': { transform: 'translate(6px, 10px) scale(1.15)' },
-          '50%': { transform: 'translate(-12px, -6px) scale(0.9)' },
-          '75%': { transform: 'translate(4px, -12px) scale(1.05)' },
-        },
-        'glow-pulse': {
-          '0%, 100%': { opacity: '0.4' },
-          '50%': { opacity: '0.7' },
-        },
-        'glow-pulse-bright': {
-          '0%, 100%': { opacity: '0.6' },
-          '50%': { opacity: '1' },
-        },
+      transitionDuration: {
+        fast: "var(--dur-fast)",
+        base: "var(--dur-base)",
+        slow: "var(--dur-slow)",
       },
-      animation: {
-        'blur-pulse': 'blur-pulse 0.5s ease-in-out',
-        'hover-ripple': 'hover-ripple 0.5s ease-out',
-        'glow-drift-1': 'glow-drift-1 8s ease-in-out infinite, glow-pulse 6s ease-in-out infinite',
-        'glow-drift-2': 'glow-drift-2 7s ease-in-out infinite, glow-pulse 5s ease-in-out 1s infinite',
-        'glow-drift-3': 'glow-drift-3 6s ease-in-out infinite, glow-pulse-bright 4s ease-in-out 0.5s infinite',
-      }
     },
   },
-  plugins: [
-    function({ addUtilities }) {
-      const newUtilities = {
-        '.backdrop-blur-webkit': {
-          '-webkit-backdrop-filter': 'blur(12px)',
-          'backdrop-filter': 'blur(12px)',
-        },
-        '.backdrop-blur-md-webkit': {
-          '-webkit-backdrop-filter': 'blur(12px)',
-          'backdrop-filter': 'blur(12px)',
-        },
-      };
-      addUtilities(newUtilities);
-    }
-  ],
-} 
+  plugins: [],
+};
