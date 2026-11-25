@@ -12,6 +12,7 @@ means *you are here*:
 - under the active filter and the active appearance setting
 - after a project title when you hover it in the index
 - at the end of the hero statement and the email address, blinking, waiting
+- on the Hexaspires in the home hero, wherever the pointer is passing through them
 
 If you're about to use teal for anything else, don't.
 
@@ -55,6 +56,11 @@ Hierarchy comes from size and the `fg` / `fg-2` pair, not from tiny type.
 separated by `--section` (96 → 192px). Hairlines (`.rule`) divide; boxes and
 cards don't.
 
+The work grid is justified rows: on wide screens a pair (3:2 beside 1.1:1,
+sides alternating) then a triple of 4:3s, and so on; every card in a row shares
+one media height. Tablets get pairs only, phones one column. Aim: a visitor
+sees at least a row and a half per screen.
+
 ## Motion
 
 - Ease: `--ease-out` (cubic-bezier(0.22, 1, 0.36, 1)) for nearly everything.
@@ -67,10 +73,36 @@ cards don't.
 
 ## Components
 
+- `Hero` — the Hexaspires (`src/three/Hexaspires.jsx`, Rapier physics) behind a
+  rolling "I make {what} {for whom}" line; each line links to the project that
+  proves it, playing inline beside "I make". Stir with the pointer, click to
+  scatter. three.js loads after first paint and pauses off screen; skipped on
+  Save-Data.
 - `Media` — every image and video. Lazy, in-view autoplay, fade-in on load,
   optional `vt` (view-transition-name) for card → hero morphs.
 - `Header` — logo, three links, sliding caret. Hides on scroll down.
 - `Footer` — contact (it is the Contact section), links, NY time, appearance.
+- `Switch` (case-study block) — one figure, several states (modes,
+  before/after), picked with the caret like the Appearance control.
+
+## Motion pieces
+
+Logo animations (Tokyo Trackmap, Academy Records, PixStudio) are white line
+work on black, and they ship as video only, never as a live runtime: 1920×1080
+H.264 at 60fps in `src/assets/hero-webm/`, a 1280px 30fps loop and a 1600px
+WebP poster in `src/assets/thumbs/`. Loops start and end on the same frame.
+
+The PixStudio loop is designed in Rive (file "PixStudio", artboard "PixStudio
+Logo", animation "Loop", 600 frames). It runs on a 24-frame beat (150 BPM)
+with hits on the eighths: gutters slice on consecutive eighths and kick the
+page, dots pop as the scan passes and then ripple, and the mark folds back
+into the opening pixel. The shipped video is newer than the Rive file, which
+still has an end cursor and a stray line to clean up. It was built through the Rive
+desktop editor's MCP server at
+`http://127.0.0.1:9791/mcp`. Rive's free plan watermarks `.riv` exports and
+strips their timelines, so the frames were rendered at 2× from the same shapes
+and keyframes and downscaled with ffmpeg. On a paid plan, export the video from
+Rive directly instead.
 
 ## Deploying
 

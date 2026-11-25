@@ -67,6 +67,75 @@ export function Figure({ size = "wide", caption, className = "", dark = false, .
   );
 }
 
+/**
+ * One figure, several states of the same thing (modes, before/after). A radio
+ * group swaps between them, marked by the caret like every other "you are
+ * here"; the images crossfade in place so the eye can compare.
+ * items: [{ label, src, alt, caption }]
+ */
+export function Switch({ label, items, size = "wide", aspectClass = "aspect-video" }) {
+  const [active, setActive] = useState(0);
+  const buttons = useRef([]);
+
+  const onKeyDown = (e) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const next = (active + step + items.length) % items.length;
+    setActive(next);
+    buttons.current[next]?.focus();
+  };
+
+  const col = {
+    wide: "col-span-12",
+    inset: "col-span-12 md:col-span-10 md:col-start-2",
+  }[size];
+
+  return (
+    <figure className="cs-block cs-fig wrap grid-12" data-reveal>
+      <div className={col}>
+        <div role="radiogroup" aria-label={label} onKeyDown={onKeyDown} className="mb-4 flex gap-6 md:mb-5">
+          {items.map((item, i) => {
+            const on = i === active;
+            return (
+              <button
+                key={item.label}
+                ref={(el) => (buttons.current[i] = el)}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                tabIndex={on ? 0 : -1}
+                onClick={() => setActive(i)}
+                className={`relative py-1 text-h4 transition-colors duration-fast ${on ? "text-fg" : "text-fg-2 hover:text-fg"}`}
+              >
+                {item.label}
+                <span
+                  aria-hidden
+                  className={`absolute -bottom-0.5 left-0 h-[2px] w-[0.5em] rounded-[1px] bg-accent transition-opacity duration-fast ${
+                    on ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              </button>
+            );
+          })}
+        </div>
+        <div className="grid">
+          {items.map((item, i) => (
+            <div
+              key={item.src}
+              aria-hidden={i !== active}
+              className={`[grid-area:1/1] transition-opacity duration-base ease-out ${i === active ? "opacity-100" : "opacity-0"}`}
+            >
+              <Media src={item.src} alt={item.alt} className={aspectClass} />
+            </div>
+          ))}
+        </div>
+        <Caption>{items[active].caption}</Caption>
+      </div>
+    </figure>
+  );
+}
+
 /** Several images in one row. Each child is a <Shot span={…} />. */
 export function Row({ children, align = "start" }) {
   return (
@@ -172,8 +241,31 @@ export function Gallery({ items, label, aspectClass = "aspect-video" }) {
   );
 }
 
-/** Big numbers. */
-export function Stats({ items }) {
+// Literal class strings so Tailwind can see them.
+const COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-3", 4: "md:grid-cols-4" };
+
+/**
+ * Big numbers. align: "wide" spreads them across the grid; "text" starts them
+ * at the prose column, so their left edge lines up with Section body text.
+ */
+export function Stats({ items, align = "wide" }) {
+  if (align === "text") {
+    return (
+      <div className="cs-block wrap grid-12" data-reveal>
+        <dl className={`col-span-12 grid grid-cols-2 gap-x-gap gap-y-10 md:col-span-8 md:col-start-5 ${COLS[items.length] ?? COLS[3]}`}>
+          {items.map((s) => (
+            <div key={s.label} className="rule pt-5">
+              <dt className="sr-only">{s.label}</dt>
+              <dd className="text-h1 tabular-nums">{s.value}</dd>
+              <dd aria-hidden className="mt-2 text-fg-2">
+                {s.label}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    );
+  }
   return (
     <div className="cs-block wrap" data-reveal>
       <dl className="grid-12 gap-y-10">

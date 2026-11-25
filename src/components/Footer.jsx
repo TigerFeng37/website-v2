@@ -90,7 +90,7 @@ function Footer() {
       <div className="wrap">
         <div className="rule pb-16 pt-14 md:pb-24 md:pt-20">
           <p className="max-w-[22ch] text-h3 text-fg-2">
-            Have a project in mind, or a team I should meet?
+            Have a project in mind?
           </p>
           <a
             href={`mailto:${EMAIL}`}
@@ -141,10 +141,7 @@ function Footer() {
           </Column>
         </div>
 
-        <div className="flex flex-col gap-1 pb-10 pt-2 text-fg-2 md:flex-row md:justify-between">
-          <p>© {year} Feng Works LLC</p>
-          <p>Set in Mona Sans. Made in New York.</p>
-        </div>
+        <p className="pb-10 pt-2 text-fg-2">© {year} Feng Works LLC</p>
       </div>
     </footer>
   );

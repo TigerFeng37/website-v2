@@ -2,10 +2,9 @@
 // case-study header. Order here is the order on the site and the order of
 // the "Next project" hand-off.
 
-import nysdaHero from "../assets/nysda/map-hero.svg";
+import nysdaHero from "../assets/hero-webm/nysda-hero.mp4";
 import { photosByFengHero } from "../assets/photos-by-feng";
 import altHero from "../assets/alt-page/hero.png";
-import pixstudioHero from "../assets/pixstudio/hero.png";
 import aspectaHero from "../assets/hero-webm/aspecta-hero.mp4";
 import eclairHero from "../assets/hero-webm/eclair-hero.mp4";
 import academyRecordsHero from "../assets/hero-webm/ar-hero.mp4";
@@ -14,6 +13,7 @@ import fengWorksHero from "../assets/hero-webm/feng-hero.mp4";
 import urbanscapeHero from "../assets/hero-webm/urbanscape-hero-1920.mp4";
 import apexHero from "../assets/hero-webm/apex-hero.mp4";
 import humanLightHero from "../assets/hero-webm/humanlight-hero.mp4";
+import pixstudioHero from "../assets/hero-webm/pixstudio-hero.mp4";
 
 // Card media: lightweight loops (1280px H.264) and posters (1600px WebP),
 // generated from the full-size heroes. Posters double as the still shown
@@ -31,8 +31,11 @@ import fengWorksThumb from "../assets/thumbs/feng-works.mp4";
 import fengWorksPoster from "../assets/thumbs/feng-works.webp";
 import humanLightThumb from "../assets/thumbs/human-light.mp4";
 import humanLightPoster from "../assets/thumbs/human-light.webp";
+import nysdaThumb from "../assets/thumbs/nyc-subway-archive.mp4";
+import nysdaPoster from "../assets/thumbs/nyc-subway-archive.webp";
 import photosThumb from "../assets/thumbs/photos-by-feng.webp";
-import pixstudioThumb from "../assets/thumbs/pixstudio.webp";
+import pixstudioThumb from "../assets/thumbs/pixstudio.mp4";
+import pixstudioPoster from "../assets/thumbs/pixstudio.webp";
 import trackmapThumb from "../assets/thumbs/tokyo-trackmap.mp4";
 import trackmapPoster from "../assets/thumbs/tokyo-trackmap.webp";
 import urbanscapeThumb from "../assets/thumbs/urbanscape.mp4";
@@ -45,20 +48,21 @@ export const projects = [
   {
     slug: "nyc-subway-archive",
     title: "NYC Subway Digital Archive",
-    tagline: "A native iOS field guide to the ghost stations and hidden remnants of the New York subway.",
+    tagline: "An iOS field guide to the ghost stations of the New York subway.",
     client: "Personal",
     categories: ["Product"],
     disciplines: ["Product design", "iOS development", "Cartography"],
     year: "2026",
     hero: nysdaHero,
-    thumb: nysdaHero,
+    thumb: nysdaThumb,
+    poster: nysdaPoster,
     summary:
       "A native iOS app that maps what the subway left behind: ghost stations, hidden platforms, unused tunnels, elevated remnants and the architecture still standing above it all.",
   },
   {
     slug: "photos-by-feng",
     title: "Photos by Feng",
-    tagline: "A street photography archive you can read by where and when each frame was taken.",
+    tagline: "A street photography archive you can browse by place and time.",
     client: "Personal",
     categories: ["Product", "Photography"],
     disciplines: ["Product design", "Creative technology", "Photography"],
@@ -71,7 +75,7 @@ export const projects = [
   {
     slug: "alt-site",
     title: "alt · site",
-    tagline: "A new navigation interaction, prototyped and shipped in one timed session. First place.",
+    tagline: "A navigation experiment, designed and shipped in 70 minutes. First place.",
     client: "v0 × Contra Hackathon",
     categories: ["Product"],
     disciplines: ["Interaction design", "Prototyping"],
@@ -80,7 +84,7 @@ export const projects = [
     hero: altHero,
     thumb: altThumb,
     summary:
-      "A speed-built landing page exploring a new navigation interaction, prototyped and shipped in a single timed session with v0.",
+      "A landing page built around one navigation idea, designed and shipped in 70 minutes with v0.",
   },
   {
     slug: "pixstudio",
@@ -88,17 +92,18 @@ export const projects = [
     tagline: "An AI-assisted creation suite for webtoon and manga artists, adopted by two studios.",
     client: "Mewtant",
     categories: ["Product"],
-    disciplines: ["Product design", "Design system", "User testing"],
+    disciplines: ["Product design", "Interaction design", "Design system"],
     year: "2024",
     hero: pixstudioHero,
     thumb: pixstudioThumb,
+    poster: pixstudioPoster,
     summary:
       "A zero-to-one, AI-assisted creation suite for webtoon and manga artists, adopted by two professional studios.",
   },
   {
     slug: "aspecta",
     title: "Aspecta.ai",
-    tagline: "A minimalist identity and a proprietary display typeface, built on proportion.",
+    tagline: "A minimal identity and a custom display typeface.",
     client: "Aspecta",
     categories: ["Brand"],
     disciplines: ["Identity", "Typeface design"],
@@ -107,12 +112,12 @@ export const projects = [
     thumb: aspectaThumb,
     poster: aspectaPoster,
     summary:
-      "A minimalist identity and proprietary display typeface for Aspecta, built on proportion and the harmony of human connection.",
+      "A minimal identity and a custom display typeface for Aspecta, built on proportion.",
   },
   {
     slug: "academy-records",
     title: "Academy Records",
-    tagline: "A record label identity with vinyl-era roots and a contemporary voice.",
+    tagline: "Identity and website for a record label with vinyl-era roots.",
     client: "Academy Records",
     categories: ["Brand"],
     disciplines: ["Identity", "Web design"],
@@ -121,7 +126,7 @@ export const projects = [
     thumb: academyRecordsThumb,
     poster: academyRecordsPoster,
     summary:
-      "A complete brand identity for Academy Records: modern design with vintage, vinyl-era influences.",
+      "Identity and website for Academy Records, a modern label with vinyl-era roots.",
   },
   {
     slug: "tokyo-trackmap",
@@ -140,7 +145,7 @@ export const projects = [
   {
     slug: "eclair",
     title: "Eclair Labs",
-    tagline: "Visual identity for an incentive platform that helps social caregivers reach their goals.",
+    tagline: "Identity for an incentive platform for social caregivers.",
     client: "Eclair Labs",
     categories: ["Brand"],
     disciplines: ["Identity", "Motion"],
@@ -154,7 +159,7 @@ export const projects = [
   {
     slug: "feng-works",
     title: "feng.works",
-    tagline: "Identity, motion and website for a one-person practice across brand and product.",
+    tagline: "Identity, motion and website for this studio.",
     client: "Feng Works",
     categories: ["Brand"],
     disciplines: ["Identity", "Web design", "Motion"],
@@ -163,12 +168,12 @@ export const projects = [
     thumb: fengWorksThumb,
     poster: fengWorksPoster,
     summary:
-      "Identity, motion and website for feng.works, a one-person design practice working across brand and product.",
+      "Identity, motion and website for Feng Works, a one-person studio for brand and product.",
   },
   {
     slug: "urbanscape",
     title: "Urbanscape",
-    tagline: "An identity and online home for photographs of everyday city life.",
+    tagline: "Identity and website for photographs of everyday city life.",
     client: "Urbanscape",
     categories: ["Brand", "Photography"],
     disciplines: ["Identity", "Web design", "Photography"],

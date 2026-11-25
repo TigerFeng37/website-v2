@@ -15,7 +15,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // React rarely changes: keep it in its own long-cached chunk.
-        // three.js stays in the lazy feng.works case-study chunk.
+        // three.js and the physics engine stay in the lazy Hexaspires chunk,
+        // loaded after first paint by the home hero and the feng.works case study.
         manualChunks: {
           react: ["react", "react-dom", "react-router-dom"],
         },

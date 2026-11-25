@@ -20,7 +20,7 @@ function UrbanscapePage() {
   return (
     <CaseStudy
       slug="urbanscape"
-      lead="Urbanscape showcases the art of everyday life through photography, and brings those moments online for everyone."
+      lead="Photographs of everyday city life, and a home for them online."
       facts={[
         { label: "Client", value: "Urbanscape" },
         { label: "Year", value: ["2025", "Ongoing"] },

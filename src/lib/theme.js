@@ -1,4 +1,5 @@
 import { useCallback, useSyncExternalStore } from "react";
+import useMediaQuery from "../hooks/useMediaQuery";
 
 // "system" follows prefers-color-scheme; "light"/"dark" are explicit choices.
 // index.html applies the saved choice before first paint.
@@ -48,4 +49,11 @@ export function useTheme() {
     () => "system"
   );
   return [theme, useCallback((t) => setTheme(t), [])];
+}
+
+/** The theme actually on screen: "light" or "dark", whatever the setting. */
+export function useResolvedTheme() {
+  const [theme] = useTheme();
+  const systemDark = useMediaQuery("(prefers-color-scheme: dark)");
+  return theme === "system" ? (systemDark ? "dark" : "light") : theme;
 }

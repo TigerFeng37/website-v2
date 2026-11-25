@@ -15,9 +15,9 @@ function Playground() {
   const finePointer = useFinePointer();
 
   useEffect(() => {
-    import("../../three/HeroAnimation")
+    import("../../three/Hexaspires")
       .then((m) => setScene(() => m.default))
-      .catch((error) => console.warn("Failed to load HeroAnimation:", error));
+      .catch((error) => console.warn("Failed to load the Hexaspires:", error));
   }, []);
 
   return (
@@ -43,7 +43,7 @@ function FengWorksPage() {
   return (
     <CaseStudy
       slug="feng-works"
-      lead="A minimalist identity for a design practice built to craft meaningful experiences across every touchpoint."
+      lead="A minimal identity for a one-person studio, built around a caret and a polyhedron."
       facts={[
         { label: "Client", value: "Feng Works LLC" },
         { label: "Year", value: "2025" },
@@ -63,8 +63,8 @@ function FengWorksPage() {
 
       <Section title="The Hexaspire">
         <p>
-          The brand's accent element is a polyhedron we call the Hexaspire. It appears across the
-          website and other materials as a playful visual identifier, and you can play with it below.
+          The brand's accent is a polyhedron called the Hexaspire. It turns up across the website
+          and print. Below is the version from the previous site; the home page has the current one.
         </p>
       </Section>
 

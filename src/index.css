@@ -270,7 +270,42 @@
   to { opacity: 1; transform: none; }
 }
 
-/* Home hero: words rise in sequence, then the facts beneath. */
+/* ==========================================================================
+   Home hero: the Hexaspires behind a rolling "I make …" line.
+   ========================================================================== */
+
+.hero-title {
+  /* The longest line, "about ghost stations._", is ~9.7em wide. */
+  font-size: clamp(1.75rem, min(8.6vw, 10.5vh), 8.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: clamp(3rem, min(7vw, 12.5vh), 8.25rem);
+  }
+}
+
+/* The canvas fades up once three.js has compiled. */
+.hero-scene canvas {
+  animation: fade-in 1.6s var(--ease-out) both;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+.hero-scrim {
+  background: linear-gradient(to top, rgb(var(--bg) / 0.94) 8%, rgb(var(--bg) / 0.55) 38%, rgb(var(--bg) / 0) 62%);
+}
+@media (min-width: 768px) {
+  .hero-scrim {
+    background:
+      linear-gradient(to top, rgb(var(--bg) / 0.9) 0%, rgb(var(--bg) / 0) 24%),
+      radial-gradient(115% 80% at 0% 100%, rgb(var(--bg) / 0.92) 0%, rgb(var(--bg) / 0.55) 42%, rgb(var(--bg) / 0) 70%);
+  }
+}
+
+/* Words rise in on load; the rolling lines take over after that. */
 .hero-word {
   display: inline-block;
   animation: word-rise 1.05s var(--ease-out) both;
@@ -282,7 +317,66 @@
 }
 .hero-fact {
   animation: intro-rise 1s var(--ease-out) both;
-  animation-delay: calc(820ms + var(--i, 0) * 80ms);
+  animation-delay: calc(700ms + var(--i, 0) * 80ms);
+}
+.hero-swap {
+  display: inline-block;
+  animation: intro-rise 0.6s var(--ease-out) both;
+}
+
+/* A line that clips its characters as they roll through it. */
+.hero-mask {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.hero-roll-out {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.hero-char {
+  display: inline-block;
+}
+.hero-roll-in .hero-char {
+  animation: char-in 0.75s var(--ease-out) both;
+}
+.hero-roll-out .hero-char {
+  animation: char-out 0.45s cubic-bezier(0.55, 0, 0.75, 0) both;
+}
+@keyframes char-in {
+  from { transform: translate3d(0, 115%, 0); }
+}
+@keyframes char-out {
+  to { transform: translate3d(0, -115%, 0); }
+}
+
+/* The current project, playing inline at cap height like a word. */
+.hero-pill {
+  position: relative;
+  height: 0.72em;
+  aspect-ratio: 16 / 10;
+  margin-left: 0.04em;
+  vertical-align: baseline;
+  overflow: hidden;
+  border-radius: max(var(--radius), 0.05em);
+  background: rgb(var(--bg-2));
+  transition: scale var(--dur-base) var(--ease-out), rotate var(--dur-base) var(--ease-out);
+}
+.hero-pill:hover {
+  scale: 1.06;
+  rotate: -2deg;
+}
+
+.hero-progress {
+  animation: progress var(--slide, 4600ms) linear both;
+}
+@keyframes progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 /* Work grid cards: a slow push-in on hover */
@@ -430,5 +524,12 @@
   .js [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+  /* The reel's timer is a timer, not decoration: keep its real length. */
+  .hero-progress {
+    animation-duration: var(--slide, 4600ms) !important;
+  }
+  .hero-roll-out {
+    display: none;
   }
 }

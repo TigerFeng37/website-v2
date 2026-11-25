@@ -6,17 +6,17 @@ import useReveal from "../../hooks/useReveal";
 const PRACTICE = [
   {
     title: "Brand identity",
-    body: "Identity systems, typefaces and motion for companies that want to look like themselves for a long time.",
+    body: "Identity systems, custom typefaces and motion.",
     proof: ["aspecta", "academy-records", "eclair"],
   },
   {
     title: "Product design",
-    body: "Zero-to-one products and the design systems that keep them coherent, from AI creative tools to native iOS apps.",
+    body: "Zero-to-one products and their design systems, from AI creative tools to native iOS apps.",
     proof: ["pixstudio", "nyc-subway-archive"],
   },
   {
     title: "Creative technology",
-    body: "I build what I design — front ends, prototypes and data pipelines — so ideas are tested in the real medium, not a mockup.",
+    body: "Front ends, prototypes and data pipelines. I build what I design.",
     proof: ["photos-by-feng", "alt-site", "tokyo-trackmap"],
   },
 ];

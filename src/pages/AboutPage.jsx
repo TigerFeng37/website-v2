@@ -11,7 +11,7 @@ const EXPERIENCE = [
     role: "Product Design Consultant",
     org: "Mewtant",
     note: "Contract",
-    body: "Worked on the company's first design system and shaped the UI of its upcoming products, including PixStudio. Mewtant is a Singapore-based company making AI-powered creative tools.",
+    body: "Worked on the first design system and the UI of upcoming products, including PixStudio, at a Singapore company making AI creative tools.",
     link: "/works/pixstudio",
   },
   {
@@ -19,13 +19,13 @@ const EXPERIENCE = [
     role: "Co-Founder",
     org: "Fusor Design Labs",
     note: "On hiatus",
-    body: "A project-based design studio where I lead UI/UX, brand identity and typeface design. Most of our clients are in tech, and we help them build a timeless presence in their industry.",
+    body: "A project-based studio where I lead UI/UX, brand identity and typeface design, mostly for tech clients.",
   },
   {
     years: "2021 — 2022",
     role: "Senior Designer (Interim)",
     org: "X Academy",
-    body: "Generalist designer at a technology and education company, working mainly on UI/UX for web apps, plus print, promotional materials and social campaigns.",
+    body: "Generalist designer at a tech and education company: mostly web app UI/UX, plus print and social campaigns.",
   },
 ];
 
@@ -34,7 +34,7 @@ const AWARDS = [
     date: "Feb 2026",
     title: "First Place, v0 × Contra Hackathon",
     issuer: "Vercel & Contra",
-    body: "Design Your Dreams, an in-person challenge in Brooklyn for students and recent grads. Participants had 70 minutes to build a portfolio-adjacent site using v0, with winners chosen from a $5,000 pool by the end of the event. I built an alternative version of my portfolio site's landing page, balancing a minimal aesthetic with an elevated level of interactivity.",
+    body: "An in-person challenge in Brooklyn: 70 minutes to build a site with v0. I built an alternate landing page for this portfolio.",
     link: "/works/alt-site",
   },
   {
@@ -118,7 +118,7 @@ function AboutPage() {
 
       <header className="wrap pt-[calc(var(--header-h)+clamp(3rem,10vh,7rem))]">
         <h1 className="intro-line max-w-[18ch] text-h1">
-          I’m a multidisciplinary designer creating meaningful interactions through thoughtful design.
+          I design brands and products, and often build them too.
         </h1>
       </header>
 
@@ -135,9 +135,9 @@ function AboutPage() {
       <Block title="Who I am">
         <div className="cs-prose">
           <p>
-            I have over four years of experience across brand identity, web design and experimental
-            projects, with a focus on <strong>branding, UI/UX and design systems</strong>. I studied
-            in the <strong>BFA Communication Design</strong> program at Parsons School of Design.
+            Four-plus years in <strong>brand identity, UI/UX and design systems</strong>, with
+            experimental projects on the side. I studied <strong>Communication Design (BFA)</strong> at
+            Parsons School of Design.
           </p>
         </div>
       </Block>
@@ -145,9 +145,8 @@ function AboutPage() {
       <Block title="How I work">
         <div className="cs-prose">
           <p>
-            My approach combines meticulous attention to detail with a holistic understanding of how
-            designs work across different touchpoints. I believe thoughtful, functional design can
-            change how people experience the world.
+            I prototype early, in the real medium and usually in code, so ideas get judged on
+            something that works rather than a mockup.
           </p>
         </div>
       </Block>
@@ -196,8 +195,7 @@ function AboutPage() {
       <Block title="This site">
         <div className="cs-prose">
           <p>
-            Hand-built — no template, no site builder. Set in Mona Sans, written in React with Vite,
-            React Router and Tailwind CSS, with Three.js for the Hexaspire, and hosted on Cloudflare
+            Hand-built in React, Three.js and Tailwind CSS. Set in Mona Sans, hosted on Cloudflare
             Pages.
           </p>
         </div>
