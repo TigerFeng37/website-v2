@@ -1,39 +1,30 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Optimize for mobile performance
-    target: 'es2015',
-    minify: 'terser',
+    target: ["es2020", "safari15"],
+    minify: "terser",
     terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.logs in production
-        drop_debugger: true
-      }
+      compress: { drop_console: true, drop_debugger: true },
     },
+    // Media is served as files, never inlined into JS.
+    assetsInlineLimit: 0,
     rollupOptions: {
       output: {
-        // Split chunks for better caching and loading
+        // React rarely changes: keep it in its own long-cached chunk.
+        // three.js and the physics engine stay in the lazy Hexaspires chunk,
+        // loaded after first paint by the home hero and the feng.works case study.
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          components: [
-            './src/components/Navbar.jsx',
-            './src/components/Footer.jsx',
-            './src/components/SafariCompatibility.jsx',
-            './src/components/MobileOptimizer.jsx'
-          ]
-        }
-      }
+          react: ["react", "react-dom", "react-router-dom"],
+        },
+      },
     },
-    // Chunk size warning limit
-    chunkSizeWarningLimit: 1000
   },
-  // Optimize dev server for mobile testing
   server: {
-    host: true, // Allow external connections for mobile testing
-    port: 3000
-  }
-})
+    host: true,
+    port: 3000,
+  },
+});

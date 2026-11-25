@@ -1,119 +1,149 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import severed from "../assets/severed.webp";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import useClock from "../hooks/useClock";
+import { useTheme } from "../lib/theme";
 
-const EMAIL = "me@feng.works";
-const MARQUEE_REPEAT = 4;
+export const EMAIL = "me@feng.works";
 
-const formatTime = (timeZone) =>
-  new Date().toLocaleTimeString([], {
-    ...(timeZone ? { timeZone } : {}),
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZoneName: 'short',
-  });
+const ELSEWHERE = [
+  { label: "GitHub", href: "https://github.com/TigerFeng37" },
+  { label: "Photographs", href: "https://photos.feng.works" },
+];
 
-/** Re-renders once a minute, on the minute, so the clocks stay honest. */
-function useMinuteClock() {
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    let interval;
-    const align = setTimeout(() => {
-      setTick((t) => t + 1);
-      interval = setInterval(() => setTick((t) => t + 1), 60_000);
-    }, 60_000 - (Date.now() % 60_000));
-    return () => {
-      clearTimeout(align);
-      clearInterval(interval);
-    };
-  }, []);
+const THEMES = [
+  { value: "system", label: "Auto" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+];
+
+function CopyEmail() {
+  const [copied, setCopied] = useState(false);
+  const timer = useRef(0);
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="inline-flex h-11 items-center rounded-full border border-line/20 px-5 text-fg-2 transition-colors duration-fast hover:border-fg/40 hover:text-fg"
+    >
+      <span aria-live="polite">{copied ? "Copied to clipboard" : "Copy address"}</span>
+    </button>
+  );
 }
 
-function MarqueeRun() {
+function ThemeSwitch() {
+  const [theme, setTheme] = useTheme();
   return (
-    <div className="flex" aria-hidden>
-      {Array.from({ length: MARQUEE_REPEAT }, (_, i) => (
-        <span key={i} className="text-xl font-mono text-gray-400">
-          <span className="text-[#72EAE0]">⊙</span>&nbsp;form shapes meaning&nbsp;
-          <span className="text-[#72EAE0]">⊙</span>&nbsp;meaning shapes form&nbsp;
-        </span>
-      ))}
+    <div role="radiogroup" aria-label="Appearance" className="flex gap-5">
+      {THEMES.map((t) => {
+        const on = theme === t.value;
+        return (
+          <button
+            key={t.value}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            onClick={() => setTheme(t.value)}
+            className={`relative py-1 transition-colors duration-fast ${on ? "text-fg" : "text-fg-2 hover:text-fg"}`}
+          >
+            {t.label}
+            <span
+              aria-hidden
+              className={`absolute -bottom-0.5 left-0 h-[2px] w-[0.5em] rounded-[1px] bg-accent transition-opacity duration-fast ${
+                on ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function Column({ title, children }) {
+  return (
+    <div className="col-span-6 md:col-span-3">
+      <h3 className="mb-3 font-normal text-fg-2">{title}</h3>
+      {children}
     </div>
   );
 }
 
 function Footer() {
-  useMinuteClock();
+  const time = useClock("America/New_York");
   const year = new Date().getFullYear();
 
   return (
-    <footer className="flex flex-col bg-[#141618]">
-      <div className="grid grid-cols-1 md:grid-cols-4">
-        <div className="px-4 py-6 md:py-12 flex flex-col items-start justify-center border-t border-white/10 col-span-1 md:col-span-3">
-          <h2 className="text-5xl md:text-6xl font-light leading-[1] md:leading-[0.9]">
-            Let's Create<br />Something Meaningful
-          </h2>
+    <footer id="contact" className="mt-section">
+      <div className="wrap">
+        <div className="rule pb-16 pt-14 md:pb-24 md:pt-20">
+          <p className="max-w-[22ch] text-h3 text-fg-2">
+            Have a project in mind?
+          </p>
           <a
             href={`mailto:${EMAIL}`}
-            className="group px-4 py-3 mt-6 mb-2 md:mb-[-1rem] w-full flex flex-row justify-between bg-[#72EAE0] text-black rounded transition-colors hover:bg-white"
+            className="group mt-5 inline-block text-h1 font-medium md:mt-7"
           >
-            <span>LET'S CONNECT</span>
-            <span className="flex items-center gap-4">
-              <span className="hidden sm:inline font-mono text-sm opacity-70">{EMAIL}</span>
-              <span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden>→</span>
+            <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_0.05em] bg-left-bottom bg-no-repeat pb-[0.06em] transition-[background-size] duration-slow ease-out group-hover:bg-[length:100%_0.05em]">
+              {EMAIL}
             </span>
+            <span className="caret caret-blink" aria-hidden />
           </a>
+          <div className="mt-8">
+            <CopyEmail />
+          </div>
         </div>
-        <div className="px-4 pt-6 pb-12 md:py-12 flex flex-col items-start justify-end border-t border-white/10 col-span-1">
-          <dl className="flex flex-col items-start justify-center">
-            <dt className="text-xl font-medium text-gray-400">Your Timezone</dt>
-            <dd className="text-4xl font-light text-white tabular-nums">{formatTime()}</dd>
-            <dt className="text-xl font-medium text-gray-400 mt-4">My Timezone</dt>
-            <dd className="text-4xl font-light text-white tabular-nums md:mb-[-1.5rem]">
-              {formatTime('America/New_York')}
-            </dd>
-          </dl>
-        </div>
-      </div>
 
-      <div className="w-full p-2 overflow-hidden">
-        <div className="flex animate-marquee whitespace-nowrap">
-          <MarqueeRun />
-          <MarqueeRun />
+        <div className="grid-12 rule gap-y-10 py-12 md:py-14">
+          <Column title="Elsewhere">
+            <ul className="space-y-1">
+              {ELSEWHERE.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href} target="_blank" rel="noopener noreferrer" className="link">
+                    {l.label}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Column>
+          <Column title="Index">
+            <ul className="space-y-1">
+              <li>
+                <Link to="/#work" viewTransition className="link">
+                  Work
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" viewTransition className="link">
+                  About
+                </Link>
+              </li>
+            </ul>
+          </Column>
+          <Column title="Timezone">
+            <p className="font-medium">New York City</p>
+            <p className="tabular-nums">{time}</p>
+          </Column>
+          <Column title="Appearance">
+            <ThemeSwitch />
+          </Column>
         </div>
-      </div>
 
-      <div
-        className="flex flex-row justify-between items-end p-4 mt-1 border-t border-white/10 md:h-[20rem] bg-cover bg-[position:50%_60%] lg:bg-[position:50%_47%] md:bg-[image:var(--footer-bg)]"
-        style={{ '--footer-bg': `url(${severed})` }}
-      >
-        <div className="flex flex-col justify-start">
-          <span className="text-lg font-bold">FENG<span className="text-[#72EAE0]">_</span></span>
-          <nav aria-label="Footer" className="flex flex-col text-lg text-white/70 my-2 md:my-4">
-            <Link to="/#works" className="hover:text-[#72EAE0] transition-colors">Works</Link>
-            <Link to="/about" className="hover:text-[#72EAE0] transition-colors">About</Link>
-            <a href="https://photos.feng.works" className="hover:text-[#72EAE0] transition-colors">Photos ↗</a>
-          </nav>
-          <span className="text-lg font-regular text-white/50">© {year} Feng Works</span>
-        </div>
-        <div className="flex flex-col items-end justify-start">
-          <span className="text-lg text-white/50">New York, NY</span>
-          <a href={`mailto:${EMAIL}`} className="text-lg text-white/50 hover:text-[#72EAE0] transition-colors">
-            {EMAIL}
-          </a>
-        </div>
+        <p className="pb-10 pt-2 text-fg-2">© {year} Feng Works LLC</p>
       </div>
-
-      <style>{`
-        @keyframes marquee {
-          from { transform: translateX(0%); }
-          to { transform: translateX(-50%); }
-        }
-        .animate-marquee { animation: marquee 20s linear infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-marquee { animation: none; }
-        }
-      `}</style>
     </footer>
   );
 }

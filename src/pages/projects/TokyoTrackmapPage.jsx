@@ -1,8 +1,7 @@
-import React from "react";
 import CaseStudy from "../../components/case-study/CaseStudy";
-import ProjectDetails from "../../components/case-study/ProjectDetails";
-import Carousel from "../../components/case-study/Carousel";
-import heroAnim from "../../assets/trackmap/ttp-hero.mp4";
+import { Figure, Gallery, Points, Quote, Row, Section, Shot } from "../../components/case-study/blocks";
+import identityAnim from "../../assets/trackmap/ttp-hero.mp4";
+import identityPoster from "../../assets/trackmap/ttp-hero-poster.webp";
 import tm1 from "../../assets/trackmap/TM-1.webp";
 import tm2 from "../../assets/trackmap/TM-2.webp";
 import tm3 from "../../assets/trackmap/TM-3.webp";
@@ -13,112 +12,129 @@ import demo7 from "../../assets/trackmap/demo7.webp";
 import demo8 from "../../assets/trackmap/demo8.webp";
 
 const SLIDES = [
-  { src: tm4, caption: "Tokyo Station area" },
-  { src: tm1, caption: "Shimbashi Station area" },
-  { src: tm2, caption: "Ueno Station area, with elevation breakdowns" },
-  { src: tm3, caption: "Shinagawa Station area" },
+  { src: tm4, caption: "Tokyo Station area: trunk platforms, Imperial Palace moat and adjacent Metro lines" },
+  { src: tm1, caption: "Shimbashi Station area, including the Old Shinbashi alignment beside modern junctions" },
+  { src: tm2, caption: "Ueno Station area, with 2F / 1F / B4F elevation breakdowns and the underground depot" },
+  { src: tm3, caption: "Shinagawa and Takanawa Gateway, including the Tamachi Rolling Stock Center" },
 ].map((s) => ({ ...s, alt: `Tokyo Trackmap detail: ${s.caption}` }));
+
+const GRAMMAR = [
+  {
+    title: "True-scale track geometry",
+    body: "Every curve, turnout, crossover and yard siding follows real GIS coordinates, so riders see how lines actually thread beneath streets and rivers.",
+  },
+  {
+    title: "Schematic line language",
+    body: "Lines stay color-coded to each operator's official trunk palette, with solid platform blocks and clean junctions cutting out visual clutter.",
+  },
+  {
+    title: "Bilingual station coding",
+    body: "Labels pair Japanese and English names with route badges and station numbers, staying readable whether zoomed out to a ward or down to 100 m.",
+  },
+  {
+    title: "Multi-level hub insets",
+    body: "Stacked interchanges like JR Ueno and its underground subway facility break out into clean 2F, 1F, B4F and underground diagrams (構内図).",
+  },
+];
 
 function TokyoTrackmapPage() {
   return (
-    <CaseStudy slug="tokyo-trackmap">
-      <div className="mb-16 rounded-lg overflow-hidden bg-black animate-on-scroll image-fade stagger-2">
-        <video
-          className="w-full aspect-video md:h-[50vh] object-cover"
-          autoPlay
-          muted
-          playsInline
-          aria-label="Tokyo Trackmap identity animation"
-        >
-          <source src={heroAnim} type="video/mp4" />
-        </video>
-      </div>
+    <CaseStudy
+      slug="tokyo-trackmap"
+      lead="Tokyo's rail network, plotted at true geographic scale while staying as legible as a schematic."
+      facts={[
+        { label: "Client", value: "Personal initiative" },
+        { label: "Year", value: ["2023", "Ongoing"] },
+        { label: "Team", value: "Feng Works" },
+        { label: "Scope", value: ["Cartography", "Visual identity", "Web design"] },
+      ]}
+    >
+      <Section title="Overview">
+        <p>
+          Standard transit diagrams straighten curves and compress distances for quick routing;
+          geographic rail maps keep true coordinates but usually drown in overlapping lines and
+          engineering symbols.
+        </p>
+        <p>
+          Tokyo Trackmap is an ongoing cartography and web project that refuses that trade-off: it
+          documents Tokyo's dense rail network — every platform, switch and yard —{" "}
+          <strong>at true geographic scale with the graphic restraint of a subway diagram</strong>.
+        </p>
+      </Section>
 
-      <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Concept</h2>
-          <p className="text-lg text-gray-300">
-            Tokyo Trackmap is an experimental mapping project that visualizes
-            Tokyo's dense railway system. It aims to document the network in a
-            geographically accurate way while keeping a simple, easy-to-read visual
-            language.
-          </p>
-        </div>
-      </div>
+      <Gallery items={SLIDES} label="Tokyo Trackmap station-area details" aspectClass="aspect-[2560/1559]" />
 
-      <Carousel
-        slides={SLIDES}
-        label="Tokyo Trackmap station-area details"
-        aspect="aspect-square md:aspect-video"
-        showCaptions
-        className="mb-16 animate-on-scroll image-fade"
+      <Section title="Cartography and data">
+        <p>
+          The map began from GIS datasets of Tokyo's rail network cross-referenced against
+          OpenRailwayMap. Lines, yards and stations were transcribed into a single master Figma
+          file, with each track weighted for clarity and each station anchored to its real footprint
+          along parks, canals and historic alignments like Old Shinbashi.
+        </p>
+        <p>
+          Colors come straight from each line's official identifier palette, paired with bilingual
+          Japanese and English labels, station-numbering badges and inset diagrams where stacked
+          underground complexes would otherwise collide.
+        </p>
+      </Section>
+
+      <Points title="Map grammar" items={GRAMMAR} />
+
+      <Figure
+        src={demo5}
+        alt="Tokyo Trackmap bilingual logo construction showing crossover switches forming 東京配線図 and Tokyo Trackmap"
+        aspectClass="aspect-[2068/856]"
+        caption="Bilingual identity lockup (東京配線図 / Tokyo Trackmap) derived directly from track crossover switches."
       />
 
-      <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide stagger-1">
-          <h2 className="text-2xl font-medium mb-6">Methodology</h2>
-          <p className="text-lg text-gray-300">
-            The project started from GIS data of Tokyo's rail network, referenced
-            against OpenRailwayMap. Lines and stations were then transcribed into a
-            single large Figma file, with every line color-coded and every station
-            labeled.
-          </p>
-        </div>
-        <div className="animate-on-scroll text-slide stagger-2">
-          <h2 className="text-2xl font-medium mb-6">Communication</h2>
-          <p className="text-lg text-gray-300">
-            Colors come directly from each rail line's identifier palette, and
-            station labels combine the station symbol, number and name. The map is
-            labeled bilingually in English and Japanese.
-          </p>
-        </div>
-      </div>
+      <Section title="Visual identity">
+        <p>
+          The identity grows out of railway switches — the mechanical turnouts that guide a train
+          from one track to another. They are the structural hinge of every junction on the map,
+          and turning them into typography connects the Japanese and English wordmarks directly to
+          what the map draws.
+        </p>
+        <p>
+          Because track elements underpin the entire system, that single motif scales naturally from
+          animated dividers to station wayfinding totems, posters and the interactive{" "}
+          <em>tokyo-trackmap.com</em> web viewer.
+        </p>
+      </Section>
 
-      <figure className="mb-16 rounded-lg overflow-hidden animate-on-scroll image-fade">
-        <img src={demo5} alt="Tokyo Trackmap overview" className="w-full" loading="lazy" decoding="async" />
-      </figure>
-
-      <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide stagger-1">
-          <h2 className="text-2xl font-medium mb-6">Visual identity</h2>
-          <p className="text-lg text-gray-300">
-            The identity is drawn from railway tracks and switches{" "}
-            <span className="text-gray-500">
-              (the mechanism that moves rails to guide a train from one track to
-              another)
-            </span>
-            . They are the foundation of every line and one of the most common
-            elements on the map.
-          </p>
-        </div>
-        <div className="animate-on-scroll text-slide stagger-2 md:pt-14">
-          <p className="text-lg text-gray-300">
-            Because track elements underpin the whole map, they give the identity
-            a great deal of flexibility and room to extend in different design
-            directions.
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        {[demo7, demo8].map((src) => (
-          <figure key={src} className="rounded-lg overflow-hidden aspect-[3/2] animate-on-scroll image-fade">
-            <img src={src} alt="Tokyo Trackmap identity application" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-          </figure>
-        ))}
-      </div>
-      <figure className="mb-16 rounded-lg overflow-hidden animate-on-scroll image-fade">
-        <img src={demo6} alt="Tokyo Trackmap identity system" className="w-full" loading="lazy" decoding="async" />
-      </figure>
-
-      <ProjectDetails
-        items={[
-          { label: "Client", value: "Personal initiative" },
-          { label: "Year", value: "2023", note: "Work in progress" },
-          { label: "Team", value: "Feng Works" },
-          { label: "Scope", value: ["Cartography", "Visual identity", "Web design"] },
-        ]}
+      <Figure
+        src={identityAnim}
+        poster={identityPoster}
+        label="Tokyo Trackmap identity animation"
+        aspectClass="aspect-[16/9] md:aspect-[2688/864]"
+        caption="Motion study: track lines branch through switches to reveal the bilingual title."
       />
+      <Row>
+        <Shot
+          span={7}
+          src={demo7}
+          alt="Two designers reviewing Tokyo Trackmap on a laptop with 100m scale bar and legend controls"
+          aspectClass="aspect-[4/3]"
+          caption="Desktop web viewer with 100 m scale bar and legend toggle."
+        />
+        <Shot
+          span={5}
+          src={demo8}
+          alt="Tokyo Trackmap mobile browser view centered on Tokyo Station tracks"
+          aspectClass="aspect-[2270/2642]"
+          caption="Mobile view at tokyo-trackmap.com, tuned for single-hand panning."
+        />
+      </Row>
+      <Figure
+        src={demo6}
+        alt="Tokyo Trackmap digital station totem and platform poster inside a concrete transit concourse"
+        aspectClass="aspect-[3/2]"
+        caption="Environmental application: digital concourse totem and platform poster."
+      />
+
+      <Quote>
+        When line weights, colors and label hierarchy stay disciplined, true-to-life rail geography
+        can read just as calmly as an abstract diagram.
+      </Quote>
     </CaseStudy>
   );
 }

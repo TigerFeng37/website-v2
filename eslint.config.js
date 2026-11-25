@@ -17,7 +17,7 @@ export default [
         sourceType: 'module',
       },
     },
-    settings: { react: { version: '18.3' } },
+    settings: { react: { version: 'detect' } },
     plugins: {
       react,
       'react-hooks': reactHooks,
@@ -29,10 +29,20 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      // Plain JS project: component contracts live in JSDoc, not PropTypes.
+      'react/prop-types': 'off',
+      'react/no-unescaped-entities': 'off',
+      // Destructuring a key out of `...rest` on purpose is fine.
+      'no-unused-vars': ['error', { ignoreRestSiblings: true }],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
     },
+  },
+  {
+    // react-three-fiber elements take three.js props, not DOM attributes.
+    files: ['src/three/**/*.{js,jsx}'],
+    rules: { 'react/no-unknown-property': 'off' },
   },
 ]

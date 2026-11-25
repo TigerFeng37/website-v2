@@ -3,31 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Yicheng Feng — Design &amp; Creative Technology</title>
-    <meta name="description" content="Yicheng Feng is a New York–based multidisciplinary designer working across brand identity, UI/UX and creative technology." />
+    <title>Yicheng Feng — Designer &amp; Creative Technologist</title>
+    <meta name="description" content="Yicheng Feng is a New York–based designer and creative technologist making brands, interfaces and the software behind them." />
     <meta name="author" content="Yicheng Feng" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#F3F3F0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141618" media="(prefers-color-scheme: dark)" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="feng.works" />
     <meta property="og:url" content="https://feng.works/" />
-    <meta property="og:title" content="Yicheng Feng — Design &amp; Creative Technology" />
-    <meta property="og:description" content="Yicheng Feng is a New York–based multidisciplinary designer working across brand identity, UI/UX and creative technology." />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:title" content="Yicheng Feng — Designer &amp; Creative Technologist" />
+    <meta property="og:description" content="Brands, interfaces and the software behind them. Independent designer in New York." />
+    <meta property="og:image" content="https://feng.works/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Yicheng Feng — Designer and creative technologist making brands, interfaces and the software behind them." />
+    <meta name="twitter:card" content="summary_large_image" />
 
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;1,400&family=IBM+Plex+Sans:wght@100;300;400;500;600;700&display=swap" />
+    <!-- Apply the saved theme before first paint so there's never a flash of the wrong one. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <noscript>This site needs JavaScript. Contact: me@feng.works</noscript>
+    <noscript>This site needs JavaScript. Say hello at me@feng.works.</noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

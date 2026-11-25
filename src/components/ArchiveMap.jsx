@@ -1,22 +1,26 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import baseMap from "../assets/nysda/map-base.svg";
 import data from "../assets/nysda/places.json";
 
 /**
  * The archive's 204 places over a static basemap (land, MTA lines, stations).
- * `active` is a category group ({ label, keys }) or null. When set, its places
- * are highlighted and everything else steps back.
+ * `active` is a group ({ label, keys, field }) or null: `field` is "c" for
+ * category (the default) or "s" for access status. When set, its places are
+ * highlighted and everything else steps back. The corner shows the group's
+ * name and count; `labelClassName` can hide it (e.g. on phones).
  */
-function ArchiveMap({ active }) {
+function ArchiveMap({ active, labelClassName = "" }) {
   const keys = active ? new Set(active.keys) : null;
+  const field = active?.field ?? "c";
+  const isIn = (p) => keys.has(p[field]);
 
   // Draw highlighted dots last so they sit on top.
   const ordered = useMemo(() => {
     if (!keys) return data.places;
-    return [...data.places].sort((a, b) => keys.has(a.c) - keys.has(b.c));
+    return [...data.places].sort((a, b) => isIn(a) - isIn(b));
   }, [active]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const count = keys ? data.places.filter((p) => keys.has(p.c)).length : data.places.length;
+  const count = keys ? data.places.filter(isIn).length : data.places.length;
 
   return (
     <div
@@ -41,7 +45,7 @@ function ArchiveMap({ active }) {
         }
       >
         {ordered.map((p) => {
-          const on = !keys || keys.has(p.c);
+          const on = !keys || isIn(p);
           const lit = keys && on;
           return (
             <circle
@@ -57,7 +61,8 @@ function ArchiveMap({ active }) {
                 transform: `scale(${lit ? 1.6 : 1})`,
                 transformBox: "fill-box",
                 transformOrigin: "center",
-                transition: "opacity 400ms ease, transform 400ms cubic-bezier(.2,.8,.2,1), fill 400ms ease",
+                transition:
+                  "opacity 400ms ease, transform 400ms cubic-bezier(.2,.8,.2,1), fill 400ms ease",
               }}
             >
               <title>{p.n}</title>
@@ -65,9 +70,11 @@ function ArchiveMap({ active }) {
           );
         })}
       </svg>
-      <div className="absolute left-4 top-4 font-mono text-xs md:text-sm pointer-events-none">
-        <span className="text-white">{active ? active.label : "All places"}</span>
-        <span className="text-[#72EAE0] ml-2">{count}</span>
+      <div
+        className={`pointer-events-none absolute left-4 top-3 text-white md:left-5 md:top-4 ${labelClassName}`}
+      >
+        {active ? active.label : "All places"}
+        <span className="ml-2 tabular-nums text-white/60">{count}</span>
       </div>
     </div>
   );

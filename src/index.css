@@ -2,188 +2,362 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   Tokens
+   Colors are bare RGB channels so Tailwind can apply opacity (bg-fg/10).
+   The only chromatic color on the site is the accent: the teal caret from
+   the FENG_ wordmark. It always means "you are here".
+   ========================================================================== */
+
+:root {
+  /* Paper — light */
+  --bg: 243 243 240;
+  --bg-2: 232 232 227;
+  --fg: 20 22 24; /* brand ink #141618 */
+  --fg-2: 92 96 100;
+  --fg-3: 148 151 154;
+  --line: 20 22 24;
+  --accent: 52 204 192; /* brand teal, deepened for paper: #34CCC0 */
+  --accent-ink: 12 117 109; /* teal that passes contrast on paper */
+  --line-alpha: 0.12;
+  color-scheme: light;
+
+  /* Type — one fluid scale, 375px → 1600px viewports */
+  --fs-display: clamp(2.75rem, 1.55rem + 5.1vw, 7.75rem);
+  --fs-1: clamp(2.375rem, 1.5rem + 3.6vw, 5.75rem);
+  --fs-2: clamp(1.875rem, 1.35rem + 2.1vw, 3.5rem);
+  --fs-3: clamp(1.4375rem, 1.2rem + 0.95vw, 2.125rem);
+  --fs-4: clamp(1.1875rem, 1.1rem + 0.38vw, 1.4375rem);
+  --fs-body: clamp(1.0625rem, 1.01rem + 0.2vw, 1.1875rem);
+  --fs-small: 0.9375rem;
+
+  /* Space */
+  --gutter: clamp(1.25rem, 0.6rem + 2.9vw, 3.5rem);
+  --gap: clamp(1rem, 0.75rem + 1vw, 1.75rem);
+  --section: clamp(6rem, 4rem + 8vw, 12rem);
+  --header-h: 4.5rem;
+  --max: 110rem;
+  --radius: 4px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur-base: 420ms;
+  --dur-slow: 900ms;
+}
+
+/* Ink — dark. Declared twice: once for "follow the system", once for an
+   explicit choice made in the footer's appearance switch. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: 20 22 24;
+    --bg-2: 31 34 37;
+    --fg: 236 236 232;
+    --fg-2: 156 160 165;
+    --fg-3: 100 104 109;
+    --line: 236 236 232;
+    --accent: 114 234 224; /* brand teal #72EAE0 */
+    --accent-ink: 114 234 224;
+    --line-alpha: 0.13;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: 20 22 24;
+  --bg-2: 31 34 37;
+  --fg: 236 236 232;
+  --fg-2: 156 160 165;
+  --fg-3: 100 104 109;
+  --line: 236 236 232;
+  --accent: 114 234 224; /* brand teal #72EAE0 */
+  --accent-ink: 114 234 224;
+  --line-alpha: 0.13;
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
 @layer base {
   html {
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: rgb(var(--bg));
+    color: rgb(var(--fg));
+    font-family: theme("fontFamily.sans");
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100svh;
+    font-size: var(--fs-body);
+    line-height: 1.55;
+    font-weight: 400;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgb(var(--accent));
+    color: rgb(20 22 24);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent-ink));
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  hr {
+    border-color: rgb(var(--line) / var(--line-alpha));
   }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  width: 100%;
-  background: #000;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+/* ==========================================================================
+   Components
+   ========================================================================== */
+
+@layer components {
+  /* Page frame */
+  .wrap {
+    width: 100%;
+    max-width: var(--max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gap);
+  }
+
+  .rule {
+    border-top: 1px solid rgb(var(--line) / var(--line-alpha));
+  }
+
+  /* Links that read as text and pick up an underline on hover */
+  .link {
+    text-decoration-line: underline;
+    text-decoration-color: rgb(var(--fg) / 0.25);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .link:hover {
+    text-decoration-color: rgb(var(--fg));
+  }
+
+  /* The caret: the teal underscore from the wordmark.
+     Sized in em so it sits on the baseline of whatever text it follows. */
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.1em;
+    margin-left: 0.08em;
+    vertical-align: baseline;
+    background: rgb(var(--accent));
+    border-radius: 0.5px;
+  }
+  /* An overlay caret that adds no width, so it never forces a line break */
+  .caret-ghost {
+    margin-right: -0.58em;
+  }
+  .caret-blink {
+    animation: caret-blink 1.1s steps(1, end) infinite;
+  }
+
+  /* Header: transparent at rest, frosted paper once the page has moved. */
+  .site-header {
+    view-transition-name: header;
+  }
+  .site-header.is-scrolled {
+    background: rgb(var(--bg) / 0.82);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 1px 0 rgb(var(--line) / var(--line-alpha));
+  }
+  /* Selected work: title and filters pin under the header, and rise into
+     its place when the header tucks away on the way down. */
+  .work-bar {
+    top: var(--header-h);
+    transition: top var(--dur-base) var(--ease-out);
+  }
+  :root[data-header-hidden] .work-bar {
+    top: 0;
+  }
+  /* Full-bleed frosted sheet behind the pinned bar, matching the header */
+  .work-bar-bg {
+    position: absolute;
+    z-index: -1;
+    /* -1px: cover the bar's own top rule so no line peeks above the frost */
+    inset: -1px auto 0 50%;
+    width: 100vw;
+    translate: -50% 0;
+    background: rgb(var(--bg) / 0.82);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 1px 0 rgb(var(--line) / var(--line-alpha));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .work-bar.is-stuck .work-bar-bg {
+    opacity: 1;
+  }
+  .nav-caret {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0.5em;
+    height: 2px;
+    background: rgb(var(--accent));
+    border-radius: 1px;
+    pointer-events: none;
+    transition:
+      transform 380ms var(--ease-out),
+      opacity 220ms var(--ease-out);
+  }
+  .nav-caret.is-out {
+    transition-duration: 380ms, 100ms;
+  }
+
+  /* Media placeholder tone while images and videos load */
+  .media {
+    position: relative;
+    overflow: hidden;
+    background: rgb(var(--bg-2));
+    border-radius: var(--radius);
+    isolation: isolate;
+  }
+  .media > img,
+  .media > video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
-::selection {
-  background: #72EAE0;
-  color: #000;
+@keyframes caret-blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
 }
 
-:focus-visible {
-  outline: 2px solid #72EAE0;
-  outline-offset: 3px;
-}
+/* ==========================================================================
+   Reveal — elements with [data-reveal] rise in the first time they're seen.
+   Driven by hooks/useReveal.js. Content stays visible without JS.
+   ========================================================================== */
 
-/* ===== Scroll reveals (driven by components/case-study/useReveal.js) =====
-   useReveal tags each .animate-on-scroll block with data-reveal=<type> based
-   on what it contains; every type gets its own entrance so a page reads as
-   a sequence of different gestures rather than one repeated fade. */
-:root {
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
-  --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
-}
-
-.animate-on-scroll {
+.js [data-reveal] {
   opacity: 0;
+  transform: translate3d(0, 18px, 0);
   transition:
-    opacity 0.8s var(--ease-out-quart),
-    transform 0.8s var(--ease-out-quart);
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
 }
-/* Fallbacks before useReveal has tagged the element. */
-.animate-on-scroll.text-slide { transform: translateX(-32px); }
-.animate-on-scroll.image-fade { transform: translateY(20px); }
-.animate-on-scroll.animate-in { opacity: 1; transform: none; }
-.stagger-1 { transition-delay: 0.1s; }
-.stagger-2 { transition-delay: 0.2s; }
-.stagger-3 { transition-delay: 0.3s; }
-.stagger-4 { transition-delay: 0.4s; }
-.stagger-5 { transition-delay: 0.5s; }
-
-/* Wipes use an animated mask rather than clip-path: a fully clipped element
-   has no visible area, so IntersectionObserver would never report it. */
-.animate-on-scroll[data-reveal="title"],
-.animate-on-scroll[data-reveal="image"],
-.animate-on-scroll[data-reveal="bleed"],
-.animate-on-scroll[data-reveal="quote"] {
-  -webkit-mask-image: linear-gradient(#000, #000);
-  mask-image: linear-gradient(#000, #000);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+.js [data-reveal="fade"] {
+  transform: none;
 }
-
-/* Title block: rises out of a mask. */
-.animate-on-scroll[data-reveal="title"] {
-  transform: translateY(0.75em);
-  -webkit-mask-position: bottom;
-  mask-position: bottom;
-  -webkit-mask-size: 100% 0%;
-  mask-size: 100% 0%;
-  transition:
-    opacity 0.6s var(--ease-out-quart),
-    transform 1.1s var(--ease-out-expo),
-    -webkit-mask-size 1.1s var(--ease-out-expo),
-    mask-size 1.1s var(--ease-out-expo);
-}
-
-/* Body copy: drifts up and comes into focus. */
-.animate-on-scroll[data-reveal="text"] {
-  transform: translateY(24px);
-  filter: blur(8px);
-  transition:
-    opacity 0.9s var(--ease-out-quart),
-    transform 0.9s var(--ease-out-quart),
-    filter 0.9s var(--ease-out-quart);
-}
-
-/* Still images: curtain wipe from the top while the photo settles from a zoom. */
-.animate-on-scroll[data-reveal="image"] {
-  opacity: 1;
-  -webkit-mask-position: top;
-  mask-position: top;
-  -webkit-mask-size: 100% 0%;
-  mask-size: 100% 0%;
-  transition:
-    -webkit-mask-size 1.2s var(--ease-in-out-quart),
-    mask-size 1.2s var(--ease-in-out-quart);
-}
-.animate-on-scroll[data-reveal="image"] img {
-  transform: scale(1.12);
-  transition: transform 1.6s var(--ease-out-expo);
-  transition-delay: inherit;
-}
-.animate-on-scroll[data-reveal="image"].animate-in img { transform: none; }
-
-/* Video and live canvases: grow into place. */
-.animate-on-scroll[data-reveal="video"] {
-  transform: scale(0.92);
-  transition:
-    opacity 0.9s var(--ease-out-quart),
-    transform 1.3s var(--ease-out-expo);
-}
-
-/* Full-bleed media: opens from the centre line outwards. */
-.animate-on-scroll[data-reveal="bleed"] {
-  opacity: 1;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 0% 100%;
-  mask-size: 0% 100%;
-  transition:
-    -webkit-mask-size 1.4s var(--ease-in-out-quart),
-    mask-size 1.4s var(--ease-in-out-quart);
-}
-
-/* Slideshows: settle back from a slight zoom. */
-.animate-on-scroll[data-reveal="carousel"] {
-  transform: scale(1.04);
-  transition:
-    opacity 1s var(--ease-out-quart),
-    transform 1.4s var(--ease-out-expo);
-}
-
-/* Pull quotes: written in from left to right. */
-.animate-on-scroll[data-reveal="quote"] {
-  opacity: 1;
-  -webkit-mask-position: left;
-  mask-position: left;
-  -webkit-mask-size: 0% 100%;
-  mask-size: 0% 100%;
-  transition:
-    -webkit-mask-size 1.3s var(--ease-in-out-quart),
-    mask-size 1.3s var(--ease-in-out-quart);
-}
-
-/* Cards, stats and detail panels: pop up with a slight overshoot. */
-.animate-on-scroll[data-reveal="card"] {
-  transform: translateY(32px) scale(0.97);
-  transition:
-    opacity 0.6s var(--ease-out-quart),
-    transform 0.8s var(--ease-out-back);
-}
-
-.animate-on-scroll[data-reveal].animate-in {
+.js [data-reveal][data-shown] {
   opacity: 1;
   transform: none;
-  filter: none;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-on-scroll,
-  .animate-on-scroll[data-reveal],
-  .animate-on-scroll.text-slide,
-  .animate-on-scroll.image-fade {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    -webkit-mask-image: none;
-    mask-image: none;
-    transition: none;
+/* Intro — above-the-fold lines rise on page load (CSS only, so they also
+   play inside a view transition's live snapshot). */
+.intro-line {
+  animation: intro-rise 1.1s var(--ease-out) both;
+  animation-delay: calc(120ms + var(--i, 0) * 90ms);
+}
+@keyframes intro-rise {
+  from { opacity: 0; transform: translate3d(0, 0.35em, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   Home hero: the Hexaspires behind a rolling "I make …" line.
+   ========================================================================== */
+
+.hero-title {
+  /* The longest line, "about ghost stations._", is ~9.7em wide. */
+  font-size: clamp(1.75rem, min(8.6vw, 10.5vh), 8.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: clamp(3rem, min(7vw, 12.5vh), 8.25rem);
   }
-  .animate-on-scroll[data-reveal="image"] img { transform: none; transition: none; }
-  html { scroll-behavior: auto; }
 }
 
-/* ===== Home hero (components/HomeHero.jsx) ===== */
-/* One masked line of the headline; padding makes room for descenders. */
+/* The canvas fades up once three.js has compiled. */
+.hero-scene canvas {
+  animation: fade-in 1.6s var(--ease-out) both;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+.hero-scrim {
+  background: linear-gradient(to top, rgb(var(--bg) / 0.94) 8%, rgb(var(--bg) / 0.55) 38%, rgb(var(--bg) / 0) 62%);
+}
+@media (min-width: 768px) {
+  .hero-scrim {
+    background:
+      linear-gradient(to top, rgb(var(--bg) / 0.9) 0%, rgb(var(--bg) / 0) 24%),
+      radial-gradient(115% 80% at 0% 100%, rgb(var(--bg) / 0.92) 0%, rgb(var(--bg) / 0.55) 42%, rgb(var(--bg) / 0) 70%);
+  }
+}
+
+/* Words rise in on load; the rolling lines take over after that. */
+.hero-word {
+  display: inline-block;
+  animation: word-rise 1.05s var(--ease-out) both;
+  animation-delay: calc(80ms + var(--i, 0) * 42ms);
+}
+@keyframes word-rise {
+  from { opacity: 0; transform: translate3d(0, 0.38em, 0); }
+  to { opacity: 1; transform: none; }
+}
+.hero-fact {
+  animation: intro-rise 1s var(--ease-out) both;
+  animation-delay: calc(700ms + var(--i, 0) * 80ms);
+}
+.hero-swap {
+  display: inline-block;
+  animation: intro-rise 0.6s var(--ease-out) both;
+}
+
+/* A line that clips its characters as they roll through it. */
 .hero-mask {
   display: block;
   position: relative;
@@ -199,475 +373,334 @@ body {
 }
 .hero-char {
   display: inline-block;
+  animation-delay: var(--d, 0ms);
 }
 .hero-roll-in .hero-char {
-  animation: hero-char-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: char-in 0.75s var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
 }
 .hero-roll-out .hero-char {
-  animation: hero-char-out 0.45s cubic-bezier(0.55, 0, 0.75, 0) both;
+  animation: char-out 0.36s cubic-bezier(0.55, 0, 0.75, 0) both;
+  animation-delay: var(--d, 0ms);
 }
-@keyframes hero-char-in {
-  from { transform: translateY(130%); }
-  to { transform: translateY(0); }
+/* When a phrase is replacing another, wait until the old one has mostly
+   cleared the line so the two never overlap. */
+.hero-roll-out + .hero-roll-in .hero-char {
+  animation-delay: calc(var(--d, 0ms) + var(--roll-lag, 280ms));
 }
-@keyframes hero-char-out {
-  from { transform: translateY(0); }
-  to { transform: translateY(-130%); }
+@keyframes char-in {
+  from { transform: translate3d(0, 115%, 0); }
 }
-
-.hero-scene canvas {
-  animation: hero-scene-in 1.4s ease-out both;
-}
-@keyframes hero-scene-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes char-out {
+  to { transform: translate3d(0, -115%, 0); }
 }
 
-.hero-fade-up {
-  animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+/* The current project, playing inline at cap height like a word. */
+.hero-pill {
+  position: relative;
+  height: 0.72em;
+  aspect-ratio: 16 / 10;
+  margin-left: 0.04em;
+  vertical-align: baseline;
+  overflow: hidden;
+  border-radius: max(var(--radius), 0.05em);
+  background: rgb(var(--bg-2));
+  transition: scale var(--dur-base) var(--ease-out), rotate var(--dur-base) var(--ease-out);
 }
-@keyframes hero-fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
+.hero-pill:hover {
+  scale: 1.06;
+  rotate: -2deg;
 }
 
 .hero-progress {
-  animation-name: hero-progress;
-  animation-timing-function: linear;
-  animation-fill-mode: both;
+  animation: progress var(--slide, 4600ms) linear both;
 }
-@keyframes hero-progress {
+@keyframes progress {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
 
-.hero-bob {
-  display: inline-block;
-  animation: hero-bob 2.4s ease-in-out infinite;
+/* Work grid cards: a slow push-in on hover */
+.card .media > img,
+.card .media > video {
+  transition: transform 1.1s var(--ease-out), opacity var(--dur-slow) var(--ease-out);
 }
-@keyframes hero-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
+@media (hover: hover) {
+  .card:hover .media > img,
+  .card:hover .media > video {
+    transform: scale(1.03);
+  }
 }
-a:hover > .hero-bob { animation-duration: 0.9s; }
+
+/* Work index */
+.index-row {
+  animation: intro-rise 0.9s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+.work-preview {
+  position: relative;
+  width: clamp(15rem, 22vw, 25rem);
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgb(var(--bg-2));
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35);
+}
+
+/* ==========================================================================
+   Case studies
+   ========================================================================== */
+
+/* Vertical rhythm: big gaps between ideas, tight gaps inside a run of images */
+.cs-flow {
+  padding-top: clamp(3.25rem, 2.25rem + 4vw, 6.25rem);
+}
+.cs-flow > .cs-block + .cs-block {
+  margin-top: clamp(3.5rem, 2.25rem + 4.5vw, 7.5rem);
+}
+.cs-flow > .cs-fig + .cs-fig {
+  margin-top: var(--gap);
+}
+.cs-flow > .cs-fig:has(figcaption) + .cs-fig {
+  margin-top: clamp(2rem, 1.25rem + 2.25vw, 3.5rem);
+}
+
+.cs-prose > * + * {
+  margin-top: 1em;
+}
+.cs-prose p,
+.cs-prose li {
+  font-size: var(--fs-4);
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  color: rgb(var(--fg-2));
+  max-width: 36em;
+}
+.cs-prose strong,
+.cs-prose em,
+.cs-prose a {
+  color: rgb(var(--fg));
+}
+.cs-prose strong {
+  font-weight: 500;
+}
+
+/* Section rail: a ruler in the left margin with the caret as "you are here".
+   Only on screens wide enough for the margin to hold it. */
+.section-rail {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .section-rail {
+    --rail-h: min(44vh, 24rem);
+    --x: 2rem; /* where the ruler line sits inside the hit area */
+    display: block;
+    position: fixed;
+    z-index: 40;
+    top: 50%;
+    right: max(0px, calc(max(var(--gutter), (100vw - var(--max)) / 2 + var(--gutter)) / 2 - 1rem));
+    width: 3rem;
+    height: var(--rail-h);
+    margin-top: calc(var(--rail-h) / -2);
+    transition: opacity var(--dur-base) var(--ease-out), translate var(--dur-base) var(--ease-out);
+  }
+  .section-rail:not([data-shown]):not(:focus-within) {
+    opacity: 0;
+    translate: 0.5rem 0;
+    pointer-events: none;
+  }
+  /* Labels open to the left of the ruler, away from the left-aligned text */
+  .section-rail li {
+    position: absolute;
+    right: calc(100% - var(--x));
+    top: calc(var(--k) * 100%);
+    translate: 0 -50%;
+  }
+  .section-rail a {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 0.875rem;
+    height: 1.75rem;
+    white-space: nowrap;
+    font-size: var(--fs-small);
+    line-height: 1;
+    color: rgb(var(--fg-2));
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .section-rail a:hover,
+  .section-rail a[aria-current] {
+    color: rgb(var(--fg));
+  }
+  .section-rail-tick {
+    flex: none;
+    width: 5px;
+    height: 5px;
+    margin-right: -2.5px; /* centre the dot on the ruler line */
+    border-radius: 50%;
+    background: rgb(var(--fg-3));
+    transition: scale var(--dur-base) var(--ease-out), background-color var(--dur-base) var(--ease-out);
+  }
+  .section-rail a[data-passed] .section-rail-tick {
+    background: rgb(var(--fg-2));
+  }
+  .section-rail a[aria-current] .section-rail-tick,
+  .section-rail a:hover .section-rail-tick {
+    scale: 1.4;
+    background: rgb(var(--fg));
+  }
+  .section-rail-label {
+    opacity: 0;
+    translate: 0.375rem 0;
+    transition: opacity var(--dur-fast) var(--ease-out), translate var(--dur-base) var(--ease-out);
+  }
+  .section-rail a[aria-current] .section-rail-label {
+    font-weight: 500;
+  }
+  /* One quiet sheet behind the labels so they read over anything */
+  .section-rail-panel {
+    position: absolute;
+    z-index: -1;
+    top: -1.5rem;
+    bottom: -1.5rem;
+    right: calc(100% - var(--x) - 0.75rem);
+    /* label + gap + dot, with room for the heavier weight of the current label */
+    width: calc(var(--panel-w, 12rem) + 3.25rem);
+    border-radius: var(--radius);
+    background: rgb(var(--bg) / 0.94);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 0 1px rgb(var(--line) / var(--line-alpha)), 0 24px 48px -24px rgb(0 0 0 / 0.25);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+    pointer-events: none;
+  }
+  .section-rail:hover .section-rail-panel,
+  .section-rail:focus-within .section-rail-panel {
+    opacity: 1;
+  }
+  .section-rail:hover .section-rail-label,
+  .section-rail:focus-within .section-rail-label {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .section-rail-caret {
+    /* quick start, long soft landing, no overshoot */
+    --glide: cubic-bezier(0.32, 0.72, 0, 1);
+    position: absolute;
+    left: calc(var(--x) - 4.5px);
+    width: 9px;
+    /* joins the dot at --a to the dot at --b */
+    top: calc(var(--a, 0) * 100% - 4.5px);
+    bottom: calc((1 - var(--b, 0)) * 100% - 4.5px);
+    border-radius: 999px;
+    background: rgb(var(--accent));
+    pointer-events: none;
+    /* the leading end moves first, the trailing end follows just behind */
+    transition: top 400ms var(--glide) 40ms, bottom 340ms var(--glide);
+  }
+  .section-rail[data-dir="up"] .section-rail-caret {
+    transition: top 340ms var(--glide), bottom 400ms var(--glide) 40ms;
+  }
+  .section-rail[data-dir="jump"] .section-rail-caret {
+    transition: top 340ms var(--glide), bottom 340ms var(--glide);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .section-rail-caret {
+      transition: none !important;
+    }
+  }
+}
+
+/* Galleries scroll sideways; the first slide sits on the grid, the rest run
+   off the right edge to show there's more. */
+.gallery-track {
+  --edge: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  padding-inline: var(--edge);
+  scrollbar-width: none;
+}
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+.gallery-slide {
+  flex: 0 0 min(86%, 72rem);
+  scroll-snap-align: start;
+}
+@media (min-width: 768px) {
+  .gallery-slide {
+    flex-basis: min(72%, 72rem);
+  }
+}
+
+/* Shared media keeps its crop while it morphs from card to hero */
+::view-transition-old(*.media),
+::view-transition-new(*.media) {
+  height: 100%;
+  object-fit: cover;
+}
+::view-transition-group(*.media) {
+  overflow: clip;
+  border-radius: var(--radius);
+}
+
+/* ==========================================================================
+   Page transitions (View Transitions API, via React Router's viewTransition)
+   ========================================================================== */
+
+::view-transition-old(root) {
+  animation: vt-out 260ms var(--ease-in-out) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 520ms var(--ease-out) 80ms both;
+}
+@keyframes vt-out {
+  to { opacity: 0; transform: translate3d(0, -8px, 0); }
+}
+@keyframes vt-in {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+}
+
+/* Shared project media morphs from card to case-study hero */
+::view-transition-group(*) {
+  animation-duration: 640ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(header),
+::view-transition-new(header) {
+  animation: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-roll-in .hero-char,
-  .hero-fade-up,
-  .hero-bob {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
   }
-  .hero-roll-out { display: none; }
-}
-
-/* Add these view transition styles at the end of your CSS file */
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes slide-from-right {
-  from { transform: translateX(30px); }
-  to { transform: translateX(0); }
-}
-
-@keyframes slide-to-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-30px); }
-}
-
-::view-transition-old(root) {
-  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-out,
-             400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
-}
-
-::view-transition-new(root) {
-  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) 90ms both fade-in,
-             400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
-}
-
-/* Add these for specific elements if you want them to transition independently */
-.view-transition-name-logo {
-  view-transition-name: logo;
-}
-
-.view-transition-name-title {
-  view-transition-name: page-title;
-}
-
-.view-transition-name-about-content,
-.view-transition-name-about-skills,
-.view-transition-name-about-experience,
-.view-transition-name-about-contact {
-  view-transition-name: about-section;
-}
-
-/* Make sure images don't flash during transition */
-::view-transition-image-pair(root) {
-  isolation: auto;
-}
-
-::view-transition-new(root),
-::view-transition-old(root) {
-  animation-duration: 0.5s;
-}
-
-/* Exclude certain elements from transitions */
-.view-transition-exclude {
-  view-transition-name: none !important;
-  contain: layout;
-}
-
-/* Fix for browsers that support the API but with different implementations */
-@supports (view-transition-name: none) {
-  .view-transition-exclude {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
     animation: none !important;
   }
-}
-
-/* Preloader Animation Styles */
-@keyframes preloader-bar {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-.preloader-bar {
-  transform-origin: left;
-  animation: preloader-bar 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-}
-
-@keyframes fadeInOut {
-  0% { opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { opacity: 0.4; }
-}
-
-.preloader-text {
-  animation: fadeInOut 2s infinite;
-}
-
-.preloader-appear {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.preloader-disappear {
-  animation: fadeOut 1s ease-in-out forwards;
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* Hero Title and Navbar Animation Styles */
-@keyframes slideFromBottom {
-  from { 
-    transform: translateY(50px); 
-    opacity: 0;
-  }
-  to { 
-    transform: translateY(0); 
+  .js [data-reveal] {
     opacity: 1;
+    transform: none;
   }
-}
-
-@keyframes slideFromLeft {
-  from { 
-    transform: translateX(-50px); 
-    opacity: 0;
+  /* The reel's timer is a timer, not decoration: keep its real length. */
+  .hero-progress {
+    animation-duration: var(--slide, 4600ms) !important;
   }
-  to { 
-    transform: translateX(0); 
-    opacity: 1;
+  .hero-roll-out {
+    display: none;
   }
-}
-
-@keyframes slideFromRight {
-  from { 
-    transform: translateX(50px); 
-    opacity: 0;
-  }
-  to { 
-    transform: translateX(0); 
-    opacity: 1;
-  }
-}
-
-.animate-hero-title-1 {
-  animation: slideFromLeft 0.8s ease-out forwards;
-  animation-delay: 0.3s;
-  opacity: 0;
-}
-
-.animate-hero-title-2 {
-  animation: slideFromRight 0.8s ease-out forwards;
-  animation-delay: 0.6s;
-  opacity: 0;
-}
-
-.animate-navbar {
-  animation: slideFromBottom 0.7s ease-out forwards;
-  animation-delay: 1s;
-  opacity: 0;
-}
-
-/* Mobile Safari backdrop-filter support */
-@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .backdrop-blur-md-webkit {
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
-}
-
-/* Fallback for devices without backdrop-filter support */
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .backdrop-blur-md-webkit {
-    background-color: rgba(0, 0, 0, 0.8) !important;
-  }
-}
-
-/* Ensure proper stacking context for backdrop effects */
-.navbar-backdrop {
-  isolation: isolate;
-}
-
-/* iOS specific fixes - More conservative approach */
-@supports (-webkit-touch-callout: none) {
-  .backdrop-blur-md-webkit {
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    /* Force hardware acceleration only when needed and more conservatively */
-    transform: translate3d(0, 0, 0);
-    will-change: auto; /* Let browser decide when to optimize */
-  }
-  
-  /* Prevent Safari from crashing on complex animations */
-  .backdrop-blur-md-webkit::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    backdrop-filter: inherit;
-    -webkit-backdrop-filter: inherit;
-    z-index: -1;
-  }
-}
-
-/* Additional Safari stability improvements */
-@media screen and (-webkit-min-device-pixel-ratio: 1) {
-  /* Prevent Safari crash on memory-intensive operations */
-  .animate-hero-title-1,
-  .animate-hero-title-2,
-  .animate-navbar {
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-  
-  /* More conservative transform usage */
-  .preloader-text {
-    transform: translateZ(0);
-  }
-}
-
-/* Safari-specific body class improvements */
-.safari-browser {
-  /* Optimize rendering performance */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-.safari-browser .backdrop-blur-md-webkit {
-  /* More conservative backdrop filter for Safari */
-  -webkit-backdrop-filter: blur(8px) !important;
-  backdrop-filter: blur(8px) !important;
-}
-
-/* Reduced motion for Safari memory management */
-.reduced-motion * {
-  animation-duration: 0.01s !important;
-  animation-delay: 0s !important;
-  transition-duration: 0.01s !important;
-  transition-delay: 0s !important;
-}
-
-.reduced-motion .preloader-text {
-  animation: none !important;
-}
-
-.reduced-motion .animate-hero-title-1,
-.reduced-motion .animate-hero-title-2,
-.reduced-motion .animate-navbar {
-  animation: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* Safari touch behavior improvements */
-.safari-browser * {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.safari-browser input,
-.safari-browser textarea,
-.safari-browser button {
-  -webkit-user-select: text;
-  user-select: text;
-}
-
-/* ===== MOBILE CRASH PREVENTION OPTIMIZATIONS ===== */
-
-/* Mobile device optimizations */
-.mobile-optimized video {
-  /* Reduce video quality on mobile */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-  
-  /* Force hardware acceleration but limit layers */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  will-change: auto;
-}
-
-.mobile-optimized .animate-spin {
-  /* Reduce spinner animation frequency */
-  animation-duration: 2s !important;
-}
-
-.mobile-optimized .preloader-text {
-  /* Simplify text animation */
-  animation: none !important;
-}
-
-/* Low memory device optimizations */
-.low-memory-device * {
-  /* Disable all non-essential animations */
-  animation-duration: 0.1s !important;
-  animation-delay: 0s !important;
-  transition-duration: 0.1s !important;
-  transition-delay: 0s !important;
-  
-  /* Remove expensive visual effects */
-  filter: none !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-.low-memory-device video {
-  /* Reduce video quality significantly */
-  filter: none !important;
-  opacity: 0.8 !important;
-}
-
-.low-memory-device .animate-hero-title-1,
-.low-memory-device .animate-hero-title-2,
-.low-memory-device .animate-navbar {
-  animation: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* Emergency low memory mode - triggered dynamically */
-.emergency-low-memory {
-  /* Remove all visual effects */
-  background: #000000 !important;
-}
-
-.emergency-low-memory * {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-  background-image: none !important;
-}
-
-.emergency-low-memory video {
-  display: none !important;
-}
-
-.emergency-low-memory .preloader-text {
-  color: #ffffff !important;
-  font-size: 18px !important;
-  animation: none !important;
-}
-
-/* iOS Safari specific fixes */
-@supports (-webkit-touch-callout: none) {
-  /* Prevent iOS Safari memory leaks */
-  video {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
-  
-  /* Disable problematic CSS features on iOS */
-  .mobile-optimized *::before,
-  .mobile-optimized *::after {
-    display: none !important;
-  }
-  
-  /* Reduce backdrop filters that cause crashes */
-  .mobile-optimized .backdrop-blur {
-    backdrop-filter: none !important;
-    background-color: rgba(0, 0, 0, 0.8) !important;
-  }
-}
-
-/* Viewport height fix for mobile browsers */
-.mobile-optimized .min-h-screen {
-  min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height */
-}
-
-/* Reduce memory usage of gradients on mobile */
-.mobile-optimized [style*="gradient"] {
-  background: rgba(0, 0, 0, 0.8) !important;
-}
-
-/* Prevent scroll-triggered repaints on mobile */
-.mobile-optimized {
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: auto !important;
-}
-
-/* Media queries for specific device optimization */
-@media (max-width: 768px) {
-  /* Disable expensive animations on small screens */
-  .animate-on-scroll {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-    -webkit-mask-image: none !important;
-    mask-image: none !important;
-  }
-  .animate-on-scroll[data-reveal="image"] img {
-    transform: none !important;
-  }
-}
-
-@media (max-height: 600px) {
-  /* Optimize for devices with small screens */
-  video {
-    object-fit: cover !important;
-    height: auto !important;
-    max-height: 100vh !important;
+  .hero-mask {
+    --roll-lag: 0ms;
   }
 }
