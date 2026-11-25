@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Decorative, seamlessly looping canvas animation for the NYSDA case study.
@@ -187,11 +187,11 @@ export function draw(ctx, w, h, t, reduced) {
         ctx.textAlign = "center";
         ctx.textBaseline = "alphabetic";
         ctx.fillStyle = `rgba(255,255,255,${la})`;
-        ctx.font = `500 ${small ? 10 : 12}px "IBM Plex Mono", ui-monospace, monospace`;
+        ctx.font = `700 ${small ? 11 : 13}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
         ctx.fillText(s.name, sx, y - 16);
         ctx.textBaseline = "top";
         ctx.fillStyle = `rgba(${ACCENT},${la * 0.85})`;
-        ctx.font = `400 ${small ? 9 : 11}px "IBM Plex Mono", ui-monospace, monospace`;
+        ctx.font = `400 ${small ? 11 : 12}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
         ctx.fillText(s.ghost, sx, y + 14);
       }
     });

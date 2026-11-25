@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import baseMap from "../assets/nysda/map-base.svg";
 import data from "../assets/nysda/places.json";
 
@@ -65,9 +65,9 @@ function ArchiveMap({ active }) {
           );
         })}
       </svg>
-      <div className="absolute left-4 top-4 font-mono text-xs md:text-sm pointer-events-none">
-        <span className="text-white">{active ? active.label : "All places"}</span>
-        <span className="text-[#72EAE0] ml-2">{count}</span>
+      <div className="pointer-events-none absolute left-4 top-3 text-white md:left-5 md:top-4">
+        {active ? active.label : "All places"}
+        <span className="ml-2 tabular-nums text-white/60">{count}</span>
       </div>
     </div>
   );

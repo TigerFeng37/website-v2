@@ -11,7 +11,7 @@ import eclairHero from "../assets/hero-webm/eclair-hero.mp4";
 import academyRecordsHero from "../assets/hero-webm/ar-hero.mp4";
 import trackmapHero from "../assets/hero-webm/trackmap-hero.mp4";
 import fengWorksHero from "../assets/hero-webm/feng-hero.mp4";
-import urbanscapeHero from "../assets/hero-webm/urbanscape-hero.mp4";
+import urbanscapeHero from "../assets/hero-webm/urbanscape-hero-1920.mp4";
 import apexHero from "../assets/hero-webm/apex-hero.mp4";
 import humanLightHero from "../assets/hero-webm/humanlight-hero.mp4";
 

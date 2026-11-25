@@ -1,8 +1,7 @@
-import React from "react";
 import CaseStudy from "../../components/case-study/CaseStudy";
-import ProjectDetails from "../../components/case-study/ProjectDetails";
-import Carousel from "../../components/case-study/Carousel";
+import { Bento, Figure, Gallery, Section } from "../../components/case-study/blocks";
 import logoAnim from "../../assets/ar/logo-anim.mp4";
+import logoPoster from "../../assets/ar/logo-anim-poster.webp";
 import demo1 from "../../assets/ar/demo-1.webp";
 import demo2 from "../../assets/ar/demo-2.webp";
 import demo3 from "../../assets/ar/demo-3.webp";
@@ -18,80 +17,47 @@ const SLIDES = [demo1, demo2, demo3, demo4].map((src, i) => ({
 
 function AcademyRecordsPage() {
   return (
-    <CaseStudy slug="academy-records">
-      <div className="mb-16 rounded-lg overflow-hidden bg-black animate-on-scroll image-fade stagger-2">
-        <video
-          className="w-full aspect-video object-cover"
-          autoPlay
-          muted
-          playsInline
-          aria-label="Academy Records logo animation"
-        >
-          <source src={logoAnim} type="video/mp4" />
-        </video>
-      </div>
+    <CaseStudy
+      slug="academy-records"
+      facts={[
+        { label: "Client", value: "Academy Records" },
+        { label: "Year", value: "2023" },
+        { label: "Team", value: "Fusor Design Labs" },
+        { label: "Scope", value: ["Brand identity", "Logo design", "Packaging"] },
+      ]}
+    >
+      <Section title="Brand philosophy">
+        <p>
+          The identity aims to capture the essence of classic vinyl while presenting a contemporary
+          aesthetic that speaks to collectors and casual listeners alike.
+        </p>
+      </Section>
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Brand philosophy</h2>
-          <p className="text-lg text-gray-300">
-            The identity aims to capture the essence of classic vinyl while
-            presenting a contemporary aesthetic that speaks to collectors and
-            casual listeners alike.
-          </p>
-        </div>
-      </div>
+      <Figure src={logoAnim} poster={logoPoster} label="Academy Records logo animation" aspectClass="aspect-video" />
 
-      <Carousel
-        slides={SLIDES}
-        label="Academy Records brand applications"
-        aspect="aspect-[4/3] md:aspect-[21/9]"
-        className="mb-16 animate-on-scroll image-fade"
-      />
+      <Section title="Design process">
+        <p>
+          The process began with research into the history of record labels and vinyl culture.
+          Several concepts were explored before settling on a direction that balances nostalgia with
+          contemporary appeal.
+        </p>
+      </Section>
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Design process</h2>
-          <p className="text-lg text-gray-300">
-            The process began with research into the history of record labels and
-            vinyl culture. Several concepts were explored before settling on a
-            direction that balances nostalgia with contemporary appeal.
-          </p>
-        </div>
-      </div>
+      <Gallery items={SLIDES} label="Academy Records brand applications" aspectClass="aspect-[2560/1856]" />
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-5 gap-4">
-        <figure className="md:col-span-2 bg-gray-900 rounded-lg overflow-hidden animate-on-scroll image-fade stagger-1">
-          <img src={demo5} alt="Academy Records poster" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-        </figure>
-        <div className="md:col-span-3 grid grid-rows-2 gap-4">
-          <figure className="aspect-[2/1] bg-gray-900 rounded-lg overflow-hidden animate-on-scroll image-fade stagger-2">
-            <img src={demo7} alt="Academy Records brand application" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-          </figure>
-          <figure className="aspect-[2/1] bg-gray-900 rounded-lg overflow-hidden animate-on-scroll image-fade stagger-3">
-            <img src={demo6} alt="Academy Records brand application" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-          </figure>
-        </div>
-      </div>
+      <Section title="A cohesive identity">
+        <p>
+          The result is an identity that feels both nostalgic and current, built on the timeless
+          qualities of vinyl. The logo's line graphics draw on the grooves of a record and sound
+          waves moving through a space, while the color palette stays vibrant and modern.
+        </p>
+      </Section>
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">A cohesive identity</h2>
-          <p className="text-lg text-gray-300">
-            The result is an identity that feels both nostalgic and current, built
-            on the timeless qualities of vinyl. The logo's line graphics draw on
-            the grooves of a record and sound waves moving through a space, while
-            the color palette stays vibrant and modern.
-          </p>
-        </div>
-      </div>
-
-      <ProjectDetails
-        items={[
-          { label: "Client", value: "Academy Records" },
-          { label: "Year", value: "2023" },
-          { label: "Team", value: "Fusor Design Labs" },
-          { label: "Scope", value: ["Brand identity", "Logo design", "Packaging"] },
+      <Bento
+        tall={{ src: demo5, alt: "Academy Records poster" }}
+        stack={[
+          { src: demo7, alt: "Academy Records brand application" },
+          { src: demo6, alt: "Academy Records brand application" },
         ]}
       />
     </CaseStudy>

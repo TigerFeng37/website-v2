@@ -10,6 +10,7 @@ export const isVideo = (src) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(src 
  *   reduced motion), and don't download until they're close to the viewport.
  * - Images fade in once decoded so nothing pops.
  * - `vt` sets a view-transition-name so a card can morph into a case-study hero.
+ * - `placeholder` paints an already-cached image underneath while loading.
  *
  * Pass `controls` for long-form video the visitor should drive themselves.
  */
@@ -29,6 +30,7 @@ function Media({
   mediaClassName = "",
   rounded = true,
   label,
+  placeholder, // image shown underneath until the real media has loaded
 }) {
   const ref = useRef(null);
   const videoRef = useRef(null);
@@ -84,7 +86,10 @@ function Media({
 
   const style = {
     ...(aspect ? { aspectRatio: aspect } : null),
-    ...(vt ? { viewTransitionName: vt } : null),
+    ...(vt ? { viewTransitionName: vt, viewTransitionClass: "media" } : null),
+    ...(placeholder
+      ? { backgroundImage: `url(${placeholder})`, backgroundSize: "cover", backgroundPosition: "center" }
+      : null),
   };
   const fitClass = fit === "contain" ? "!object-contain" : "";
   const fade = `transition-opacity duration-slow ease-out ${loaded ? "opacity-100" : "opacity-0"}`;

@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import "@fontsource-variable/mona-sans/wght.css";
+import "@fontsource-variable/mona-sans/wght-italic.css";
 import "./index.css";
-import "./styles/legacy.css";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 

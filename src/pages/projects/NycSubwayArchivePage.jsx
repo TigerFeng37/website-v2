@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CaseStudy from "../../components/case-study/CaseStudy";
-import ProjectDetails from "../../components/case-study/ProjectDetails";
+import { Points, Quote, Row, Section, Shot, Stats } from "../../components/case-study/blocks";
 import GhostLineAnimation from "../../components/GhostLineAnimation";
-import mapHero from "../../assets/nysda/map-hero.svg";
 import ArchiveMap from "../../components/ArchiveMap";
 import appIcon from "../../assets/nysda/app-icon.png";
 import screenMap from "../../assets/nysda/screens/map.webp";
@@ -12,41 +11,17 @@ import screenCollection from "../../assets/nysda/screens/collection.webp";
 import screenTimeline from "../../assets/nysda/screens/timeline.webp";
 import screenGlossary from "../../assets/nysda/screens/glossary.webp";
 
+const REPO_URL = "https://github.com/TigerFeng37/nyc-subway-digital-archive";
+
 // App Store-style screenshots from the repo's docs/screenshots/.
 const SCREENS = [
-  {
-    src: screenMap,
-    title: "The map",
-    caption: "All 204 remnants on a live subway map, with the Explore sheet at peek height.",
-  },
-  {
-    src: screenTransit,
-    title: "Transit layer",
-    caption: "Zoom in and station dots, transfers and route bullets appear, as in Apple Maps' transit view.",
-  },
-  {
-    src: screenDetail,
-    title: "Object page",
-    caption: "City Hall: gallery, station-sign title, fact grid and how to see it legally.",
-  },
-  {
-    src: screenCollection,
-    title: "Collections",
-    caption: "Curated guides to ghost stations, shells and more, sorted A–Z or by distance.",
-  },
-  {
-    src: screenTimeline,
-    title: "Timeline",
-    caption: "Every place in the order it opened, going back to 1841.",
-  },
-  {
-    src: screenGlossary,
-    title: "Glossary",
-    caption: "84 transit terms and acronyms, from IRT to OMNY, with a jargon of the day.",
-  },
+  { src: screenMap, title: "The map", caption: "All 204 remnants on a live subway map, with the Explore sheet at peek height." },
+  { src: screenTransit, title: "Transit layer", caption: "Zoom in and station dots, transfers and route bullets appear, as in Apple Maps' transit view." },
+  { src: screenDetail, title: "Object page", caption: "City Hall: gallery, station-sign title, fact grid and how to see it legally." },
+  { src: screenCollection, title: "Collections", caption: "Curated guides to ghost stations, shells and more, sorted A–Z or by distance." },
+  { src: screenTimeline, title: "Timeline", caption: "Every place in the order it opened, going back to 1841." },
+  { src: screenGlossary, title: "Glossary", caption: "84 transit terms and acronyms, from IRT to OMNY, with a jargon of the day." },
 ];
-
-const REPO_URL = "https://github.com/TigerFeng37/nyc-subway-digital-archive";
 
 // Counts from SubwayArchive/Resources/places.json; tints from Design/Theme.swift.
 const CATEGORIES = [
@@ -104,239 +79,188 @@ const ROUTES = [
   { s: "S", c: "#808183" },
 ];
 
-function NycSubwayArchivePage() {
-  // Category isolated on the dataset map: hover/focus previews, click/tap pins.
+const HELVETICA = { fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' };
+
+function Dataset() {
+  // Hover/focus previews a category on the map; click or tap pins it.
   const [hoverCat, setHoverCat] = useState(null);
   const [pinnedCat, setPinnedCat] = useState(null);
   const activeCat = hoverCat || pinnedCat;
 
   return (
-    <CaseStudy slug="nyc-subway-archive">
-      {/* Hero: rendered from the app's own line, station and place data */}
-      <div className="mb-6 rounded-lg overflow-hidden border border-white/10 animate-on-scroll image-fade stagger-2">
-        <div className="w-full aspect-video bg-[#111111]">
-          <img
-            src={mapHero}
-            alt="Map of New York City subway lines in MTA colors, with the archive's 204 places marked as teal dots"
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
+    <section className="cs-block wrap grid-12 items-start gap-y-10" data-reveal>
+      <div className="col-span-12 overflow-hidden rounded-media md:sticky md:top-[calc(var(--header-h)+1.5rem)] md:col-span-7">
+        <ArchiveMap active={activeCat} />
       </div>
-      <p className="mb-16 text-sm text-gray-500 font-mono animate-on-scroll text-slide stagger-2">
-        Rendered from the app's bundled datasets: MTA service lines, every
-        station, and the archive's places in teal.
-      </p>
-
-      {/* Stats */}
-      <div className="mb-16 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {STATS.map((s, i) => (
-          <div
-            key={s.label}
-            className={`bg-gray-900 rounded-lg p-6 animate-on-scroll image-fade stagger-${i + 1}`}
-          >
-            <p className="text-4xl md:text-5xl font-medium text-[#72EAE0]">
-              {s.value}
-            </p>
-            <p className="text-sm text-gray-400 mt-2 uppercase tracking-wide">{s.label}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Intro */}
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide stagger-3">
-          <h2 className="text-2xl font-medium mb-6">The idea</h2>
-          <p className="text-lg text-gray-300 mb-6">
-            New York's subway is more than a century old, and most of its
-            history is hiding in plain sight: a tiled platform flashing past
-            the window, a stub of steel over a Brooklyn street, a station shell
-            built for a line that never came. The knowledge exists, but it's
-            spread across fan sites, forums and archives that were never
-            designed to be read on a train.
+      <div className="col-span-12 md:col-span-5">
+        <h2 className="text-h3">Building the dataset</h2>
+        <div className="cs-prose mt-5">
+          <p>
+            The places were researched from Joseph Brennan's Abandoned Stations, LTV Squad,
+            Wikipedia, nycsubway.org and the New York Transit Museum, with every description written
+            as an original summary. A Python pipeline merges the sources, removes duplicates,
+            validates ids, coordinates and years, and drops broken image links.
+          </p>
+          <p>
+            The line and station layers come from the MTA's open data, then get simplified to about
+            100&nbsp;KB so the whole map ships inside the app.
           </p>
         </div>
-        <div className="animate-on-scroll text-slide stagger-4">
-          <h2 className="text-2xl font-medium mb-6">The approach</h2>
-          <p className="text-lg text-gray-300 mb-6">
-            NYSDA brings it together as a field guide. I treated each place the
-            way a museum treats an object, with a clear title, the facts at a
-            glance, the story, and practical directions for seeing it safely
-            today. It's built natively in SwiftUI for iOS 26 so the map,
-            sheet and glass controls feel like part of the system.
-          </p>
-        </div>
-      </div>
 
-      {/* Ghost-line animation */}
-      <div className="mb-16 animate-on-scroll image-fade">
-        <div className="rounded-lg overflow-hidden border border-white/10 bg-black h-[220px] md:h-[300px]">
+        <h3 className="mt-10 text-h4">Places by category</h3>
+        <p className="mt-1 text-fg-2">Point at a category to isolate it on the map; click to keep it.</p>
+        <ul className="mt-4" onMouseLeave={() => setHoverCat(null)}>
+          {CATEGORIES.map((c) => {
+            const isActive = activeCat === c;
+            const dimmed = activeCat && !isActive;
+            return (
+              <li key={c.label}>
+                <button
+                  type="button"
+                  aria-pressed={pinnedCat === c}
+                  onMouseEnter={() => setHoverCat(c)}
+                  onFocus={() => setHoverCat(c)}
+                  onBlur={() => setHoverCat(null)}
+                  onClick={() => setPinnedCat(pinnedCat === c ? null : c)}
+                  className="rule grid w-full grid-cols-[minmax(0,10rem)_1fr_2.5rem] items-center gap-4 py-2.5 text-left"
+                >
+                  <span className={`transition-colors duration-base ${isActive ? "text-fg" : dimmed ? "text-fg-3" : "text-fg-2"}`}>
+                    {c.label}
+                  </span>
+                  <span className="h-1.5 overflow-hidden rounded-full bg-fg/[0.07]">
+                    <span
+                      className="block h-full rounded-full transition-[background-color,opacity] duration-base"
+                      style={{
+                        width: `${(c.count / MAX_COUNT) * 100}%`,
+                        backgroundColor: isActive ? "rgb(var(--accent))" : c.tint,
+                        opacity: dimmed ? 0.35 : 1,
+                      }}
+                    />
+                  </span>
+                  <span className={`text-right tabular-nums ${isActive ? "text-fg" : "text-fg-2"}`}>{c.count}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function NycSubwayArchivePage() {
+  return (
+    <CaseStudy
+      slug="nyc-subway-archive"
+      hero={{
+        alt: "Map of New York City subway lines in MTA colors, with the archive's 204 places marked as teal dots",
+      }}
+      facts={[
+        { label: "Year", value: "2026" },
+        { label: "Platform", value: "iOS 26 · SwiftUI" },
+        { label: "Type", value: "Personal project" },
+        { label: "Scope", value: ["Product & UI design", "iOS development", "Research & data pipeline"] },
+      ]}
+      links={[{ label: "Source", href: REPO_URL, text: "GitHub" }]}
+    >
+      <Stats items={STATS} />
+
+      <Section title="The idea">
+        <p>
+          New York's subway is more than a century old, and most of its history is hiding in plain
+          sight: a tiled platform flashing past the window, a stub of steel over a Brooklyn street, a
+          station shell built for a line that never came. The knowledge exists, but it's spread
+          across fan sites, forums and archives that were never designed to be read on a train.
+        </p>
+      </Section>
+      <Section title="The approach">
+        <p>
+          NYSDA brings it together as a field guide. I treated each place the way a museum treats an
+          object, with a clear title, the facts at a glance, the story, and practical directions for
+          seeing it safely today. It's built natively in SwiftUI for iOS 26 so the map, sheet and
+          glass controls feel like part of the system.
+        </p>
+      </Section>
+
+      <figure className="cs-block cs-fig wrap" data-reveal>
+        <div className="h-[240px] overflow-hidden rounded-media bg-black md:h-[340px]">
           <GhostLineAnimation />
         </div>
-        <p className="mt-3 text-sm text-gray-500 font-mono">
+        <figcaption className="mt-3 text-fg-2 md:mt-4">
           Ghost stations on the 6, 1 and Q, lit for a moment as trains pass.
+        </figcaption>
+      </figure>
+
+      <Section title="The app">
+        <p>
+          From the full map down to a single platform, plus a Learn section with a timeline and a
+          glossary for reading the system's history.
         </p>
-      </div>
+      </Section>
 
-      {/* Screens */}
-      <div className="mb-16">
-        <div className="mb-8 animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium">The app</h2>
-          <p className="text-gray-400 text-sm mt-1 max-w-2xl">
-            From the full map down to a single platform, plus a Learn section
-            with a timeline and a glossary for reading the system's history.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-6">
-          {SCREENS.map((s, i) => (
-            <figure
-              key={s.title}
-              className={`animate-on-scroll image-fade stagger-${(i % 3) + 1}`}
-            >
-              <div className="rounded-lg overflow-hidden border border-white/10 bg-black aspect-[645/1398]">
-                <img
-                  src={s.src}
-                  alt={`NYSDA app screen: ${s.title}. ${s.caption}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <figcaption className="mt-3">
-                <p className="text-base font-medium">{s.title}</p>
-                <p className="text-sm text-gray-400 mt-1">{s.caption}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
+      <Row>
+        {SCREENS.map((s) => (
+          <Shot
+            key={s.title}
+            span={4}
+            mobile={6}
+            src={s.src}
+            alt={`NYSDA app screen: ${s.title}. ${s.caption}`}
+            aspectClass="aspect-[645/1398]"
+            caption={
+              <>
+                <span className="block text-fg">{s.title}</span>
+                <span className="hidden md:inline">{s.caption}</span>
+              </>
+            }
+          />
+        ))}
+      </Row>
 
-      {/* Identity */}
-      <div className="mb-16 bg-gray-900 rounded-lg p-6 md:p-10 grid grid-cols-1 md:grid-cols-[auto,1fr] gap-8 items-center animate-on-scroll image-fade">
-        <img
-          src={appIcon}
-          alt="NYSDA app icon"
-          className="w-32 h-32 md:w-40 md:h-40 rounded-[22%] border border-white/10"
-        />
-        <div>
-          <h2 className="text-2xl font-medium mb-4">Identity</h2>
-          <p className="text-lg text-gray-300 mb-6">
-            The mark sets the NYSDA wordmark in Helvetica on a black sign band,
-            borrowing directly from the station signage it documents. Route
-            bullets use the official MTA trunk-line colors.
-          </p>
-          <div className="flex flex-wrap gap-2" aria-label="MTA trunk-line route bullets">
+      <section className="cs-block wrap grid-12 items-center gap-y-8" data-reveal>
+        <div className="col-span-12 md:col-span-4">
+          <img
+            src={appIcon}
+            alt="NYSDA app icon"
+            className="w-32 rounded-[22%] shadow-[0_20px_40px_-24px_rgb(0_0_0/0.5)] md:w-44"
+          />
+        </div>
+        <div className="col-span-12 md:col-span-8 lg:col-span-7">
+          <h2 className="text-h3">Identity</h2>
+          <div className="cs-prose mt-5">
+            <p>
+              The mark sets the NYSDA wordmark in Helvetica on a black sign band, borrowing directly
+              from the station signage it documents. Route bullets use the official MTA trunk-line
+              colors.
+            </p>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2" role="img" aria-label="MTA trunk-line route bullets">
             {ROUTES.map((r) => (
               <span
                 key={r.s}
-                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-base ${
-                  r.dark ? "text-black" : "text-white"
-                }`}
-                style={{ backgroundColor: r.c, fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif" }}
+                aria-hidden
+                className={`grid h-10 w-10 place-items-center rounded-full text-lg font-bold ${r.dark ? "text-black" : "text-white"}`}
+                style={{ backgroundColor: r.c, ...HELVETICA }}
               >
                 {r.s}
               </span>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Principles */}
-      <div className="mb-16">
-        <h2 className="text-2xl font-medium mb-8 animate-on-scroll text-slide">Design principles</h2>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-6 gap-y-10">
-          {PRINCIPLES.map((p, i) => (
-            <div
-              key={p.title}
-              className={`border-t border-white/15 pt-5 animate-on-scroll text-slide stagger-${(i % 2) + 1}`}
-            >
-              <p className="font-mono text-sm text-[#72EAE0] mb-2">
-                {String(i + 1).padStart(2, "0")}
-              </p>
-              <h3 className="text-xl font-medium mb-3">{p.title}</h3>
-              <p className="text-lg text-gray-300">{p.body}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Points title="Design principles" items={PRINCIPLES} />
 
-      {/* Data */}
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-        <div className="md:sticky md:top-24 rounded-lg overflow-hidden border border-white/10 animate-on-scroll image-fade">
-          <ArchiveMap active={activeCat} />
-        </div>
-        <div className="animate-on-scroll text-slide stagger-2">
-          <h2 className="text-2xl font-medium mb-6">Building the dataset</h2>
-          <p className="text-lg text-gray-300 mb-6">
-            The places were researched from Joseph Brennan's Abandoned
-            Stations, LTV Squad, Wikipedia, nycsubway.org and the New York
-            Transit Museum, with every description written as an original
-            summary. A Python pipeline merges the sources, removes duplicates,
-            validates ids, coordinates and years, and drops broken image links.
-          </p>
-          <p className="text-lg text-gray-300 mb-8">
-            The line and station layers come from the MTA's open data, then
-            get simplified to about 100&nbsp;KB so the whole map ships inside
-            the app.
-          </p>
-          <h3 className="text-sm text-gray-400 mb-1 uppercase tracking-wide">Places by category</h3>
-          <p className="text-xs text-gray-500 mb-4">
-            Hover a category to isolate it on the map. Click or tap to keep it.
-          </p>
-          <ul className="space-y-1" onMouseLeave={() => setHoverCat(null)}>
-            {CATEGORIES.map((c) => {
-              const isActive = activeCat === c;
-              const dimmed = activeCat && !isActive;
-              return (
-                <li key={c.label}>
-                  <button
-                    type="button"
-                    aria-pressed={pinnedCat === c}
-                    onMouseEnter={() => setHoverCat(c)}
-                    onFocus={() => setHoverCat(c)}
-                    onBlur={() => setHoverCat(null)}
-                    onClick={() => setPinnedCat(pinnedCat === c ? null : c)}
-                    className={`w-full grid grid-cols-[9.5rem,1fr,2rem] items-center gap-3 text-sm text-left py-1.5 px-2 -mx-2 rounded-md transition-colors duration-300 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#72EAE0] ${
-                      isActive ? "bg-white/5" : ""
-                    }`}
-                  >
-                    <span className={`transition-colors duration-300 ${isActive ? "text-white" : dimmed ? "text-gray-500" : "text-gray-300"}`}>
-                      {c.label}
-                    </span>
-                    <span className="h-2 rounded-full bg-white/5 overflow-hidden">
-                      <span
-                        className="block h-full rounded-full transition-colors duration-300"
-                        style={{
-                          width: `${(c.count / MAX_COUNT) * 100}%`,
-                          backgroundColor: isActive ? "#72EAE0" : c.tint,
-                          opacity: dimmed ? 0.4 : 1,
-                          boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.15)",
-                        }}
-                      />
-                    </span>
-                    <span className={`text-right font-mono ${isActive ? "text-[#72EAE0]" : "text-gray-400"}`}>{c.count}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <Dataset />
 
-      <blockquote className="max-w-2xl mr-auto my-16 pl-6 md:pl-8 border-l-4 border-[#72EAE0]/60 text-gray-300 text-lg md:text-xl italic animate-on-scroll text-slide">
-        The goal was an archive you carry onto the train: the map tells you
-        where to look, and the object page tells you what you're looking at.
-      </blockquote>
+      <Quote>
+        The goal was an archive you carry onto the train: the map tells you where to look, and the
+        object page tells you what you're looking at.
+      </Quote>
 
-      <ProjectDetails
-        link={{ label: "Source", href: REPO_URL }}
-        items={[
-          { label: "Project", value: "NYC Subway Digital Archive" },
-          { label: "Year", value: "2026" },
-          { label: "Platform", value: "iOS 26 · SwiftUI" },
-          { label: "Scope", value: ["Product & UI design", "iOS development", "Research & data pipeline"] },
-        ]}
-        footnote="Not affiliated with the MTA. Never enter tracks, tunnels or closed stations."
-      />
+      <p className="cs-block wrap text-fg-2" data-reveal>
+        Not affiliated with the MTA. Never enter tracks, tunnels or closed stations.
+      </p>
     </CaseStudy>
   );
 }

@@ -263,7 +263,6 @@
 /* Intro — above-the-fold lines rise on page load (CSS only, so they also
    play inside a view transition's live snapshot). */
 .intro-line {
-  display: block;
   animation: intro-rise 1.1s var(--ease-out) both;
   animation-delay: calc(120ms + var(--i, 0) * 90ms);
 }
@@ -312,6 +311,81 @@
   overflow: hidden;
   background: rgb(var(--bg-2));
   box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35);
+}
+
+/* ==========================================================================
+   Case studies
+   ========================================================================== */
+
+/* Vertical rhythm: big gaps between ideas, tight gaps inside a run of images */
+.cs-flow {
+  padding-top: clamp(4.5rem, 3rem + 6vw, 9rem);
+}
+.cs-flow > .cs-block + .cs-block {
+  margin-top: clamp(5rem, 3rem + 7vw, 11rem);
+}
+.cs-flow > .cs-fig + .cs-fig {
+  margin-top: var(--gap);
+}
+.cs-flow > .cs-fig:has(figcaption) + .cs-fig {
+  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+}
+
+.cs-prose > * + * {
+  margin-top: 1em;
+}
+.cs-prose p,
+.cs-prose li {
+  font-size: var(--fs-4);
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  color: rgb(var(--fg-2));
+  max-width: 36em;
+}
+.cs-prose strong,
+.cs-prose em,
+.cs-prose a {
+  color: rgb(var(--fg));
+}
+.cs-prose strong {
+  font-weight: 500;
+}
+
+/* Galleries scroll sideways; the first slide sits on the grid, the rest run
+   off the right edge to show there's more. */
+.gallery-track {
+  --edge: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  padding-inline: var(--edge);
+  scrollbar-width: none;
+}
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+.gallery-slide {
+  flex: 0 0 min(86%, 72rem);
+  scroll-snap-align: start;
+}
+@media (min-width: 768px) {
+  .gallery-slide {
+    flex-basis: min(72%, 72rem);
+  }
+}
+
+/* Shared media keeps its crop while it morphs from card to hero */
+::view-transition-old(*.media),
+::view-transition-new(*.media) {
+  height: 100%;
+  object-fit: cover;
+}
+::view-transition-group(*.media) {
+  overflow: clip;
+  border-radius: var(--radius);
 }
 
 /* ==========================================================================

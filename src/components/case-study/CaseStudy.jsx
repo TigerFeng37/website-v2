@@ -1,68 +1,126 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../Seo";
-import BackButton from "../BackButton";
-import useReveal from "./useReveal";
-import useLegacyDark from "../../hooks/useLegacyDark";
-import { getProject, getNextProject } from "../../data/projects";
+import Media from "../Media";
+import useReveal from "../../hooks/useReveal";
+import { getNextProject, getProject } from "../../data/projects";
 
 /**
- * Shell for every case study: SEO, back link, title block, scroll reveals,
- * and the "Next project" hand-off. Page bodies pass their content as children.
+ * Shell for every case study.
  *
- * `intro` overrides the summary shown beside the title (defaults to the
- * project's summary in data/projects.js).
+ * The header answers what a reviewer needs before scrolling — what it is,
+ * who it was for, what I did, when — then the cover reel (which morphs in
+ * from the card that was clicked), the page body, and the next project.
+ *
+ * facts: [{ label, value: string | string[] }]
+ * links: [{ label, href }] — live site, source, award listing
  */
-function CaseStudy({ slug, intro, quote = false, children }) {
-  const rootRef = useRef(null);
+function CaseStudy({ slug, lead, facts = [], links = [], hero, children }) {
+  const ref = useRef(null);
   const project = getProject(slug);
   const next = getNextProject(slug);
-  useReveal(rootRef);
-  useLegacyDark();
+  useReveal(ref);
 
   return (
-    <article ref={rootRef} className="pt-24 pb-16 px-6 md:px-8 max-w-6xl mx-auto">
+    <article ref={ref}>
       <Seo title={project.title} description={project.summary} />
-      <BackButton />
 
-      <header className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-12 mt-6 mb-12">
-        <div className="animate-on-scroll text-slide">
-          <h1 className="text-4xl md:text-5xl font-medium uppercase tracking-tight mb-2">
-            {project.title}
-          </h1>
-          <p className="text-base md:text-lg text-gray-400 uppercase tracking-wide">
-            {project.disciplines.join(" · ")}
-          </p>
-        </div>
-        <div className="md:w-1/3 shrink-0 animate-on-scroll text-slide stagger-1">
-          <p className={`text-lg text-gray-300 ${quote ? "italic" : ""}`}>
-            {intro ?? project.summary}
-          </p>
+      <header className="wrap pt-[calc(var(--header-h)+clamp(2rem,7vh,5.5rem))]">
+        <Link
+          to="/#work"
+          viewTransition
+          className="intro-line group inline-flex items-center gap-2 py-1 text-fg-2 transition-colors duration-fast hover:text-fg"
+        >
+          <span aria-hidden className="transition-transform duration-base ease-out group-hover:-translate-x-1">
+            ←
+          </span>
+          All work
+        </Link>
+
+        <div className="grid-12 mt-8 gap-y-12 md:mt-12">
+          <div className="col-span-12 lg:col-span-8">
+            <h1 className="intro-line text-h1" style={{ "--i": 1 }}>
+              {project.title}
+            </h1>
+            <p className="intro-line mt-6 max-w-[30ch] text-h3 text-fg-2 md:mt-8" style={{ "--i": 2 }}>
+              {lead ?? project.summary}
+            </p>
+          </div>
+
+          <dl
+            className="intro-line col-span-12 grid grid-cols-2 gap-x-gap gap-y-6 self-end lg:col-span-4"
+            style={{ "--i": 3 }}
+          >
+            {facts.map(({ label, value }) => (
+              <div key={label}>
+                <dt className="text-fg-2">{label}</dt>
+                {(Array.isArray(value) ? value : [value]).map((v) => (
+                  <dd key={v}>{v}</dd>
+                ))}
+              </div>
+            ))}
+            {links.map(({ label, href, text }) => (
+              <div key={href}>
+                <dt className="text-fg-2">{label}</dt>
+                <dd>
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="link break-words">
+                    {text ?? href.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                    <span aria-hidden> ↗</span>
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </header>
 
-      {children}
+      <div className="wrap mt-12 md:mt-16">
+        <Media
+          src={hero?.src ?? project.hero}
+          poster={hero?.poster ?? project.poster}
+          placeholder={project.poster ?? (project.thumb !== project.hero ? project.thumb : undefined)}
+          alt={hero?.alt ?? ""}
+          label={hero?.label}
+          position={hero?.position}
+          vt={`media-${slug}`}
+          priority
+          className="aspect-[4/3] md:aspect-video"
+        />
+      </div>
 
-      <nav aria-label="Next project" className="mt-24 border-t border-white/10 pt-8">
-        <Link to={`/works/${next.slug}`} viewTransition className="group flex flex-col gap-2">
-          <span className="text-xs tracking-widest text-gray-500 uppercase">Next project</span>
-          <span className="flex items-baseline justify-between gap-6">
-            <span className="text-3xl md:text-5xl font-light uppercase tracking-tight transition-colors group-hover:text-[#72EAE0]">
-              {next.title}
-            </span>
-            <span
-              className="text-3xl md:text-5xl font-light text-[#72EAE0] transition-transform duration-300 group-hover:translate-x-2"
-              aria-hidden
-            >
-              →
-            </span>
-          </span>
-          <span className="text-gray-500 uppercase tracking-wide text-sm">
-            {next.disciplines.join(" · ")}
-          </span>
-        </Link>
-      </nav>
+      <div className="cs-flow">{children}</div>
+
+      <NextProject project={next} />
     </article>
+  );
+}
+
+function NextProject({ project }) {
+  return (
+    <nav aria-label="Next project" className="wrap mt-section">
+      <Link to={`/works/${project.slug}`} viewTransition className="card group grid-12 rule gap-y-6 pt-6">
+        <div className="col-span-12 md:col-span-7">
+          <p className="text-fg-2">Next project</p>
+          <p className="mt-3 text-h1">
+            {project.title}
+            <span
+              aria-hidden
+              className="caret caret-ghost opacity-0 transition-opacity duration-fast group-hover:opacity-100 group-focus-visible:opacity-100"
+            />
+          </p>
+          <p className="mt-4 max-w-[36ch] text-h4 text-fg-2">{project.tagline}</p>
+        </div>
+        <div className="col-span-12 md:col-span-5">
+          <Media
+            src={project.thumb ?? project.hero}
+            poster={project.poster}
+            vt={`media-${project.slug}`}
+            className="aspect-[4/3]"
+          />
+        </div>
+      </Link>
+    </nav>
   );
 }
 

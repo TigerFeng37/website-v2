@@ -1,10 +1,9 @@
-import React from "react";
 import CaseStudy from "../../components/case-study/CaseStudy";
-import ProjectDetails from "../../components/case-study/ProjectDetails";
-import Carousel from "../../components/case-study/Carousel";
+import { Figure, Gallery, Row, Section, Shot } from "../../components/case-study/blocks";
 import logoAnim from "../../assets/aspecta/logo-anim.mp4";
-import gridAnimWebm from "../../assets/aspecta/grid-anim.webm";
-import gridAnimMp4 from "../../assets/aspecta/grid-anim.mp4";
+import logoPoster from "../../assets/aspecta/logo-anim-poster.webp";
+import gridAnim from "../../assets/aspecta/grid-anim-1920.mp4";
+import gridPoster from "../../assets/aspecta/grid-anim-1920-poster.webp";
 import font1 from "../../assets/aspecta/font-1.webp";
 import font2 from "../../assets/aspecta/font-2.webp";
 import font3 from "../../assets/aspecta/font-3.webp";
@@ -17,7 +16,6 @@ import demo2 from "../../assets/aspecta/demo2.webp";
 import demo3 from "../../assets/aspecta/demo3.webp";
 import demo4 from "../../assets/aspecta/demo4.png";
 
-const FONT_SPECIMENS = [font1, font2, font3, font4];
 const RENDERS = [render1, render2, render3].map((src, i) => ({
   src,
   alt: `Aspecta concept render ${i + 1}`,
@@ -25,121 +23,75 @@ const RENDERS = [render1, render2, render3].map((src, i) => ({
 
 function AspectaPage() {
   return (
-    <CaseStudy slug="aspecta">
-      <div className="mb-16 rounded-lg overflow-hidden bg-black animate-on-scroll image-fade stagger-2">
-        <video
-          className="w-full aspect-video object-cover"
-          autoPlay
-          muted
-          playsInline
-          aria-label="Aspecta logo animation"
-        >
-          <source src={logoAnim} type="video/mp4" />
-        </video>
-      </div>
+    <CaseStudy
+      slug="aspecta"
+      facts={[
+        { label: "Client", value: "Aspecta Inc." },
+        { label: "Year", value: "2022" },
+        { label: "Team", value: "Fusor Design Labs" },
+        { label: "Scope", value: ["Visual identity", "Typography", "Print design", "Motion graphics"] },
+      ]}
+    >
+      <Section title="Brand philosophy">
+        <p>
+          Aspecta's brand is built on proportion and visual harmony. The name itself points to both
+          aspect ratios and the idea of seeing things from different perspectives.
+        </p>
+      </Section>
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Brand philosophy</h2>
-          <p className="text-lg text-gray-300">
-            Aspecta's brand is built on proportion and visual harmony. The name
-            itself points to both aspect ratios and the idea of seeing things from
-            different perspectives.
-          </p>
-        </div>
-      </div>
+      <Row>
+        <Shot span={6} src={logoAnim} poster={logoPoster} label="Aspecta logo animation" aspectClass="aspect-[4/5]" />
+        <Shot span={6} src={demo1} alt="Aspecta brand application" aspectClass="aspect-[4/5]" />
+      </Row>
+      <Figure
+        size="bleed"
+        src={gridAnim}
+        poster={gridPoster}
+        label="Aspecta proportional grid animation"
+        aspectClass="aspect-square md:aspect-[21/9]"
+      />
 
-      {/* Full-bleed grid animation */}
-      <div className="w-screen ml-[calc(50%-50vw)] mb-16 animate-on-scroll image-fade">
-        <video
-          className="w-full aspect-square md:aspect-video object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-label="Aspecta proportional grid animation"
-        >
-          <source src={gridAnimWebm} type="video/webm" />
-          <source src={gridAnimMp4} type="video/mp4" />
-        </video>
-      </div>
+      <Section title="Aspecta Neue">
+        <p>
+          A proprietary display typeface drawn for the Aspecta identity, used for the logotype,
+          headings and large-format type.
+        </p>
+      </Section>
 
-      <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-6">
-        {FONT_SPECIMENS.map((src, i) => (
-          <figure
+      <Row>
+        {[font1, font2, font3, font4].map((src, i) => (
+          <Shot
             key={src}
-            className={`rounded-lg overflow-hidden animate-on-scroll image-fade stagger-${i + 1}`}
-          >
-            <img src={src} alt={`Aspecta Neue specimen ${i + 1}`} className="w-full" loading="lazy" decoding="async" />
-          </figure>
+            span={3}
+            mobile={6}
+            src={src}
+            alt={`Aspecta Neue specimen ${i + 1}`}
+            aspectClass="aspect-[281/601]"
+          />
         ))}
-      </div>
+      </Row>
+      <Figure size="inset" src={demo4} alt="Aspecta Neue type specimen sheet" aspectClass="aspect-[1695/1553]" />
 
-      <figure className="mb-8 rounded-lg overflow-hidden animate-on-scroll image-fade">
-        <img src={demo4} alt="Aspecta Neue type specimen sheet" className="w-full" loading="lazy" decoding="async" />
-      </figure>
+      <Section title="Concept visualization">
+        <p>
+          3D renders imagine Aspecta's future. Each variant represents a stage of the brand's
+          development, from SaaS product to fully decentralized workspace.
+        </p>
+      </Section>
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Aspecta Neue</h2>
-          <p className="text-lg text-gray-300">
-            A proprietary display typeface drawn for the Aspecta identity, used for
-            the logotype, headings and large-format type.
-          </p>
-        </div>
-      </div>
+      <Gallery items={RENDERS} label="Aspecta concept renders" />
 
-      <Carousel
-        slides={RENDERS}
-        label="Aspecta concept renders"
-        aspect="aspect-square md:aspect-[21/9]"
-        className="mb-8 animate-on-scroll image-fade"
-      />
+      <Section title="Scalable application">
+        <p>
+          The system was designed to adapt across digital platforms, environmental graphics and
+          print. Every application keeps the core principles of proportion and balance.
+        </p>
+      </Section>
 
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Concept visualization</h2>
-          <p className="text-lg text-gray-300">
-            3D renders imagine Aspecta's future. Each variant represents a stage of
-            the brand's development, from SaaS product to fully decentralized
-            workspace.
-          </p>
-        </div>
-      </div>
-
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-5 gap-4">
-        <figure className="aspect-square md:aspect-auto md:col-span-2 bg-gray-900 rounded-lg overflow-hidden animate-on-scroll image-fade stagger-1">
-          <img src={demo1} alt="Aspecta brand application" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-        </figure>
-        <div className="md:col-span-3 grid grid-rows-2 gap-4">
-          <figure className="aspect-square md:aspect-[2/1] bg-gray-900 rounded-lg overflow-hidden animate-on-scroll image-fade stagger-2">
-            <img src={demo2} alt="Aspecta brand application" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-          </figure>
-          <figure className="aspect-square md:aspect-[2/1] bg-gray-900 rounded-lg overflow-hidden animate-on-scroll image-fade stagger-3">
-            <img src={demo3} alt="Aspecta brand application" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-          </figure>
-        </div>
-      </div>
-
-      <div className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="animate-on-scroll text-slide">
-          <h2 className="text-2xl font-medium mb-6">Scalable application</h2>
-          <p className="text-lg text-gray-300">
-            The system was designed to adapt across digital platforms, environmental
-            graphics and print. Every application keeps the core principles of
-            proportion and balance.
-          </p>
-        </div>
-      </div>
-
-      <ProjectDetails
-        items={[
-          { label: "Client", value: "Aspecta Inc." },
-          { label: "Year", value: "2022" },
-          { label: "Team", value: "Fusor Design Labs" },
-          { label: "Scope", value: ["Visual identity", "Typography", "Print design", "Motion graphics"] },
-        ]}
-      />
+      <Row>
+        <Shot span={6} src={demo2} alt="Aspecta brand application" aspectClass="aspect-[3/2]" />
+        <Shot span={6} src={demo3} alt="Aspecta brand application" aspectClass="aspect-[3/2]" />
+      </Row>
     </CaseStudy>
   );
 }
