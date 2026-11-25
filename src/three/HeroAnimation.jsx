@@ -166,7 +166,7 @@ function Pointer({ input, drift }) {
   )
 }
 
-function Model({ children, color = 'white', roughness = 0, ...props }) {
+function Model({ children, color = 'white', roughness = 0 }) {
   const ref = useRef()
   const { nodes } = useGLTF('/media/thing.glb')
   useFrame((state, delta) => {

@@ -16,7 +16,7 @@ const SHAPES = {
  * gets one feature, an even count of six or more gets two (first, and after
  * half the pairs), and everything else pairs up wide/tall, tall/wide, ...
  */
-export function layout(items) {
+function layout(items) {
   const n = items.length;
   const features = n % 2 === 1 ? 1 : n >= 6 ? 2 : 0;
   const pairs = (n - features) / 2;

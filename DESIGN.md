@@ -74,5 +74,22 @@ cards don't.
 
 ## Deploying
 
-`yarn deploy:staging` builds and publishes to the `staging` branch of the
-`feng-works` Cloudflare Pages project (https://staging.feng-works.pages.dev).
+Staging is https://staging.feng.works (the `staging` branch of the `feng-works`
+Cloudflare Pages project). Production (`main` → feng.works) is never touched.
+
+- **Automatic:** every push to `v3-beta` runs `.github/workflows/deploy-staging.yml`,
+  which builds and runs `wrangler pages deploy --branch staging`. It needs one
+  repository secret, `CLOUDFLARE_API_TOKEN` (Account › Cloudflare Pages › Edit);
+  without it the job skips.
+- **By hand, on your machine:** `yarn deploy:staging`.
+
+Cloud agent sessions can't deploy directly: their egress proxy rewrites the
+`Authorization` header on every request to api.cloudflare.com, which breaks
+wrangler's short-lived asset-upload token. Push and let the workflow deploy.
+
+## Media pipeline
+
+Card loops and posters live in `src/assets/thumbs/` (1280px H.264, 1600px WebP),
+generated from `src/assets/hero-webm/`. Every case-study video has a
+`*-poster.webp` still beside it, used before load and under reduced motion.
+Never use the animated `logo-anim.webp` files as posters; they're megabytes.

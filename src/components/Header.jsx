@@ -48,7 +48,11 @@ function useNavCaret(listRef, activeIndex) {
     if (!list || index < 0) return setPos(null);
     const anchor = list.querySelectorAll("[data-caret-anchor]")[index];
     if (!anchor) return setPos(null);
-    setPos({ x: anchor.offsetLeft, y: anchor.offsetTop });
+    // Measure against the list itself: each link is positioned, so offsetLeft
+    // would be relative to the link rather than the list.
+    const a = anchor.getBoundingClientRect();
+    const l = list.getBoundingClientRect();
+    setPos({ x: a.left - l.left, y: a.top - l.top });
   }, [listRef, index]);
 
   useLayoutEffect(measure, [measure]);

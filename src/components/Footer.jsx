@@ -143,7 +143,7 @@ function Footer() {
 
         <div className="flex flex-col gap-1 pb-10 pt-2 text-fg-2 md:flex-row md:justify-between">
           <p>© {year} Feng Works LLC</p>
-          <p>Designed and built by Yicheng Feng.</p>
+          <p>Set in Mona Sans. Made in New York.</p>
         </div>
       </div>
     </footer>

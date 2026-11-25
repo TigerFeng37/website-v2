@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "../hooks/useMediaQuery";
 
-export const isVideo = (src) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(src ?? ""));
+const isVideo = (src) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(src ?? ""));
 
 /**
  * Every image and video on the site goes through here.

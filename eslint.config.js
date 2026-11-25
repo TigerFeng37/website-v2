@@ -32,6 +32,8 @@ export default [
       // Plain JS project: component contracts live in JSDoc, not PropTypes.
       'react/prop-types': 'off',
       'react/no-unescaped-entities': 'off',
+      // Destructuring a key out of `...rest` on purpose is fine.
+      'no-unused-vars': ['error', { ignoreRestSiblings: true }],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
