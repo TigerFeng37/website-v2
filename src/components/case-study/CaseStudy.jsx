@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../Seo";
 import Media from "../Media";
+import SectionRail from "./SectionRail";
 import useReveal from "../../hooks/useReveal";
 import { getNextProject, getProject } from "../../data/projects";
 
@@ -25,7 +26,7 @@ function CaseStudy({ slug, lead, facts = [], links = [], hero, children }) {
     <article ref={ref}>
       <Seo title={project.title} description={project.summary} />
 
-      <header className="wrap pt-[calc(var(--header-h)+clamp(2rem,7vh,5.5rem))]">
+      <header data-toc="Overview" className="wrap pt-[calc(var(--header-h)+clamp(2rem,7vh,5.5rem))]">
         <Link
           to="/#work"
           viewTransition
@@ -75,6 +76,8 @@ function CaseStudy({ slug, lead, facts = [], links = [], hero, children }) {
         </div>
       </header>
 
+      <SectionRail rootRef={ref} slug={slug} />
+
       <div className="wrap mt-12 md:mt-16">
         <Media
           src={hero?.src ?? project.hero}
@@ -98,7 +101,7 @@ function CaseStudy({ slug, lead, facts = [], links = [], hero, children }) {
 
 function NextProject({ project }) {
   return (
-    <nav aria-label="Next project" className="wrap mt-section">
+    <nav aria-label="Next project" data-toc="Next project" className="wrap mt-section">
       <Link to={`/works/${project.slug}`} viewTransition className="card group grid-12 rule gap-y-6 pt-6">
         <div className="col-span-12 md:col-span-7">
           <p className="text-fg-2">Next project</p>

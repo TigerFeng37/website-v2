@@ -11,6 +11,7 @@ means *you are here*:
 - after the current section in the nav, gliding to whatever you point at
 - under the active filter and the active appearance setting
 - after a project title when you hover it in the index
+- on the section ruler in a case study's left margin, sliding down as you read
 - at the end of the hero statement and the email address, blinking, waiting
 
 If you're about to use teal for anything else, don't.
@@ -70,6 +71,8 @@ cards don't.
 - `Media` — every image and video. Lazy, in-view autoplay, fade-in on load,
   optional `vt` (view-transition-name) for card → hero morphs.
 - `Header` — logo, three links, sliding caret. Hides on scroll down.
+- `SectionRail` — case studies only, 1280px and up. One tick per `h2` (plus
+  anything marked `data-toc`), evenly spaced; labels appear on hover/focus.
 - `Footer` — contact (it is the Contact section), links, NY time, appearance.
 
 ## Deploying
