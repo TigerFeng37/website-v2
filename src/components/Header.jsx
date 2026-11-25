@@ -71,13 +71,29 @@ function Header() {
   const listRef = useRef(null);
   const activeIndex = NAV.findIndex((item) => item.match(pathname));
   const { pos, setTarget, index } = useNavCaret(listRef, activeIndex);
-  const [moving, setMoving] = useState(false);
+  // "rest" blinks in place · "out" hides it while it travels · "in" fades it back.
+  const [phase, setPhase] = useState("rest");
+  const firstIndex = useRef(true);
 
-  // Pause the blink while the caret travels, like a real cursor.
+  // Let pinned bars elsewhere (Selected work) slide up into the header's place.
   useEffect(() => {
-    setMoving(true);
-    const t = setTimeout(() => setMoving(false), 700);
-    return () => clearTimeout(t);
+    document.documentElement.toggleAttribute("data-header-hidden", hidden);
+  }, [hidden]);
+
+  // Fade the caret out while it travels so it never slides across the words,
+  // then fade it back in at its new spot before the blink resumes.
+  useEffect(() => {
+    if (firstIndex.current) {
+      firstIndex.current = false;
+      return;
+    }
+    setPhase("out");
+    const toIn = setTimeout(() => setPhase("in"), 380);
+    const toRest = setTimeout(() => setPhase("rest"), 380 + 260);
+    return () => {
+      clearTimeout(toIn);
+      clearTimeout(toRest);
+    };
   }, [index]);
 
   const scrollToContact = (e) => {
@@ -151,9 +167,9 @@ function Header() {
             })}
             <span
               aria-hidden
-              className={`nav-caret ${moving ? "" : "caret-blink"}`}
+              className={`nav-caret ${phase === "out" ? "is-out" : ""} ${pos && phase === "rest" ? "caret-blink" : ""}`}
               style={{
-                opacity: pos ? 1 : 0,
+                opacity: pos && phase !== "out" ? 1 : 0,
                 transform: pos ? `translate3d(${pos.x + 3}px, ${pos.y - 2}px, 0)` : undefined,
               }}
             />

@@ -3,7 +3,6 @@
 // the "Next project" hand-off.
 
 import nysdaHero from "../assets/hero-webm/nysda-hero.mp4";
-import { photosByFengHero } from "../assets/photos-by-feng";
 import altHero from "../assets/alt-page/hero.png";
 import aspectaHero from "../assets/hero-webm/aspecta-hero.mp4";
 import eclairHero from "../assets/hero-webm/eclair-hero.mp4";
@@ -14,6 +13,7 @@ import urbanscapeHero from "../assets/hero-webm/urbanscape-hero-1920.mp4";
 import apexHero from "../assets/hero-webm/apex-hero.mp4";
 import humanLightHero from "../assets/hero-webm/humanlight-hero.mp4";
 import pixstudioHero from "../assets/hero-webm/pixstudio-hero.mp4";
+import photosHero from "../assets/hero-webm/photos-hero.mp4";
 
 // Card media: lightweight loops (1280px H.264) and posters (1600px WebP),
 // generated from the full-size heroes. Posters double as the still shown
@@ -33,7 +33,8 @@ import humanLightThumb from "../assets/thumbs/human-light.mp4";
 import humanLightPoster from "../assets/thumbs/human-light.webp";
 import nysdaThumb from "../assets/thumbs/nyc-subway-archive.mp4";
 import nysdaPoster from "../assets/thumbs/nyc-subway-archive.webp";
-import photosThumb from "../assets/thumbs/photos-by-feng.webp";
+import photosThumb from "../assets/thumbs/photos-by-feng.mp4";
+import photosPoster from "../assets/thumbs/photos-by-feng.webp";
 import pixstudioThumb from "../assets/thumbs/pixstudio.mp4";
 import pixstudioPoster from "../assets/thumbs/pixstudio.webp";
 import trackmapThumb from "../assets/thumbs/tokyo-trackmap.mp4";
@@ -67,8 +68,11 @@ export const projects = [
     categories: ["Product", "Photography"],
     disciplines: ["Product design", "Creative technology", "Photography"],
     year: "2026",
-    hero: photosByFengHero,
+    hero: photosHero,
     thumb: photosThumb,
+    poster: photosPoster,
+    // Plays once and holds on the full lockup instead of looping.
+    loop: false,
     summary:
       "A street-photography archive indexed by where and when — a map and a time-aware gallery over one body of work.",
   },
@@ -117,16 +121,16 @@ export const projects = [
   {
     slug: "academy-records",
     title: "Academy Records",
-    tagline: "Identity and website for a record label with vinyl-era roots.",
+    tagline: "Identity, website and packaging for a Flatiron record store with vinyl-era roots.",
     client: "Academy Records",
     categories: ["Brand"],
-    disciplines: ["Identity", "Web design"],
+    disciplines: ["Identity", "Web design", "Packaging"],
     year: "2023",
     hero: academyRecordsHero,
     thumb: academyRecordsThumb,
     poster: academyRecordsPoster,
     summary:
-      "Identity and website for Academy Records, a modern label with vinyl-era roots.",
+      "Identity, website and packaging for Academy Records, a Flatiron record store with vinyl-era roots.",
   },
   {
     slug: "tokyo-trackmap",
@@ -191,13 +195,13 @@ export const projects = [
     client: "Personal",
     categories: ["Photography"],
     disciplines: ["Fine art photography"],
-    award: "A' Design Award",
+    award: "Silver A' Design Award",
     year: "2020",
     hero: apexHero,
     thumb: apexThumb,
     poster: apexPoster,
     summary:
-      "A landscape series on the order and chaos in mountain forms. A' Design Award winner.",
+      "A landscape series on the order and chaos in mountain forms. Silver A' Design Award winner.",
   },
   {
     slug: "human-light",

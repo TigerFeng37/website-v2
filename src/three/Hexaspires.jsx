@@ -18,6 +18,12 @@ import { easing } from "maath";
 
 const TEAL = "#72EAE0";
 
+// Gravity is tilted so the cluster leans and tumbles instead of sitting still.
+const GRAVITY = [5, -1, -5];
+// Per-step impulse toward the gather point, per world unit away from it.
+const PULL = 0.2;
+const PHYSICS_HZ = 60;
+
 // The look the previous feng.works hero shipped with; the case study shows it as it was.
 const legacyPieces = [
   ...Array(4).fill({ color: "#555", roughness: 0.75 }),
@@ -70,6 +76,7 @@ const defaultGather = (w, h) => (w > h ? [w * 0.1, 0] : [0, h * 0.12]);
  * @param palette      one of PALETTES, or your own
  * @param paused       stop rendering entirely (e.g. scrolled out of view)
  * @param drift        let the pointer wander through the cluster when nobody is interacting
+ * @param scatter      strength of the click burst (1 = full; lower on small screens so pieces stay in view)
  * @param onScatter    called each time the visitor clicks/taps to scatter the shapes
  * @param eventSource  ref to the element that receives pointer input (defaults to the canvas)
  * @param gather       (viewportWidth, viewportHeight) => [x, y] the cluster gathers around
@@ -80,6 +87,7 @@ export default function Hexaspires({
   palette = PALETTES.legacy,
   paused = false,
   drift = true,
+  scatter = 1,
   onScatter,
   eventSource,
   gather = defaultGather,
@@ -101,7 +109,9 @@ export default function Hexaspires({
     clickNdc: new THREE.Vector2(),
     clickPending: false,
     blast: new THREE.Vector3(),
+    strength: scatter,
   });
+  input.current.strength = scatter;
   const scatterRef = useRef(onScatter);
   scatterRef.current = onScatter;
 
@@ -152,7 +162,7 @@ export default function Hexaspires({
         <Background color={palette.background} />
         <ambientLight intensity={0.6} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-        <Physics gravity={[5, -1, -5]}>
+        <Physics gravity={GRAVITY}>
           <Pointer input={input} drift={drift} gather={gather} />
           {palette.pieces.map((piece, i) => (
             <Piece key={i} input={input} tint={palette.tint} {...piece} />
@@ -230,8 +240,14 @@ function Piece({ position, children, input, color = "white", roughness = 0.75, a
     const since = (performance.now() - input.current.scatterAt) / SCATTER_MS;
     const loose = since < 1;
     const pull = loose ? THREE.MathUtils.smoothstep(since, 0.35, 1) : 1;
-    b.applyImpulse(vec.copy(b.translation()).sub(input.current.center).negate().multiplyScalar(0.2 * pull));
-    if (loose) b.setLinearDamping(THREE.MathUtils.lerp(SCATTER_DAMPING, DAMPING, pull));
+    // Sideways gravity would otherwise settle each piece m·g/(Hz·PULL) to the right
+    // of the gather point; aim that far left so `gather` is where the cluster sits.
+    vec.copy(input.current.center);
+    vec.x -= (b.mass() * GRAVITY[0]) / (PHYSICS_HZ * PULL);
+    b.applyImpulse(vec.sub(b.translation()).multiplyScalar(PULL * pull));
+    // A softer burst (scatter < 1) also keeps more drag, so pieces don't glide off a small screen.
+    const looseDamping = THREE.MathUtils.lerp(DAMPING, SCATTER_DAMPING, Math.min(input.current.strength, 1));
+    if (loose) b.setLinearDamping(THREE.MathUtils.lerp(looseDamping, DAMPING, pull));
     else if (b.linearDamping() !== DAMPING) b.setLinearDamping(DAMPING);
 
     // Launch away from exactly where the visitor clicked; nearer pieces go faster.
@@ -241,7 +257,7 @@ function Piece({ position, children, input, color = "white", roughness = 0.75, a
       vec.z *= 0.15; // keep the burst mostly in the screen plane so it reads
       const distance = vec.length();
       if (distance < 1e-3) vec.set(r(1), r(1), 0);
-      const speed = SCATTER_SPEED / (1 + distance * 0.45);
+      const speed = (SCATTER_SPEED * input.current.strength) / (1 + distance * 0.45);
       vec.normalize().multiplyScalar(speed * b.mass());
       vec.z += r(speed * 0.12) * b.mass();
       b.applyImpulse(vec, true);

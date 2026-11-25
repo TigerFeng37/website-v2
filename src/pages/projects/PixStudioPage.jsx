@@ -190,14 +190,6 @@ function PixStudioPage() {
           people the Advanced tab was built for chose to make real pages with it.
         </p>
       </Section>
-
-      <Section title="What I took from it">
-        <p>
-          In an AI tool, the most useful thing to design is rarely the generate button. It is everything
-          around it: where the result lands, how to get it again, and how to find it among a hundred
-          others. That is what makes AI feel like a brush.
-        </p>
-      </Section>
     </CaseStudy>
   );
 }

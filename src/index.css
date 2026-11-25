@@ -17,7 +17,7 @@
   --fg-2: 92 96 100;
   --fg-3: 148 151 154;
   --line: 20 22 24;
-  --accent: 114 234 224; /* brand teal #72EAE0 */
+  --accent: 52 204 192; /* brand teal, deepened for paper: #34CCC0 */
   --accent-ink: 12 117 109; /* teal that passes contrast on paper */
   --line-alpha: 0.12;
   color-scheme: light;
@@ -57,6 +57,7 @@
     --fg-2: 156 160 165;
     --fg-3: 100 104 109;
     --line: 236 236 232;
+    --accent: 114 234 224; /* brand teal #72EAE0 */
     --accent-ink: 114 234 224;
     --line-alpha: 0.13;
     color-scheme: dark;
@@ -69,6 +70,7 @@
   --fg-2: 156 160 165;
   --fg-3: 100 104 109;
   --line: 236 236 232;
+  --accent: 114 234 224; /* brand teal #72EAE0 */
   --accent-ink: 114 234 224;
   --line-alpha: 0.13;
   color-scheme: dark;
@@ -202,6 +204,34 @@
     backdrop-filter: blur(18px) saturate(1.4);
     box-shadow: 0 1px 0 rgb(var(--line) / var(--line-alpha));
   }
+  /* Selected work: title and filters pin under the header, and rise into
+     its place when the header tucks away on the way down. */
+  .work-bar {
+    top: var(--header-h);
+    transition: top var(--dur-base) var(--ease-out);
+  }
+  :root[data-header-hidden] .work-bar {
+    top: 0;
+  }
+  /* Full-bleed frosted sheet behind the pinned bar, matching the header */
+  .work-bar-bg {
+    position: absolute;
+    z-index: -1;
+    /* -1px: cover the bar's own top rule so no line peeks above the frost */
+    inset: -1px auto 0 50%;
+    width: 100vw;
+    translate: -50% 0;
+    background: rgb(var(--bg) / 0.82);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 1px 0 rgb(var(--line) / var(--line-alpha));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .work-bar.is-stuck .work-bar-bg {
+    opacity: 1;
+  }
   .nav-caret {
     position: absolute;
     left: 0;
@@ -212,8 +242,11 @@
     border-radius: 1px;
     pointer-events: none;
     transition:
-      transform 520ms var(--ease-out),
-      opacity var(--dur-fast) var(--ease-out);
+      transform 380ms var(--ease-out),
+      opacity 220ms var(--ease-out);
+  }
+  .nav-caret.is-out {
+    transition-duration: 380ms, 100ms;
   }
 
   /* Media placeholder tone while images and videos load */
@@ -340,12 +373,20 @@
 }
 .hero-char {
   display: inline-block;
+  animation-delay: var(--d, 0ms);
 }
 .hero-roll-in .hero-char {
   animation: char-in 0.75s var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
 }
 .hero-roll-out .hero-char {
-  animation: char-out 0.45s cubic-bezier(0.55, 0, 0.75, 0) both;
+  animation: char-out 0.36s cubic-bezier(0.55, 0, 0.75, 0) both;
+  animation-delay: var(--d, 0ms);
+}
+/* When a phrase is replacing another, wait until the old one has mostly
+   cleared the line so the two never overlap. */
+.hero-roll-out + .hero-roll-in .hero-char {
+  animation-delay: calc(var(--d, 0ms) + var(--roll-lag, 280ms));
 }
 @keyframes char-in {
   from { transform: translate3d(0, 115%, 0); }
@@ -412,16 +453,16 @@
 
 /* Vertical rhythm: big gaps between ideas, tight gaps inside a run of images */
 .cs-flow {
-  padding-top: clamp(4.5rem, 3rem + 6vw, 9rem);
+  padding-top: clamp(3.25rem, 2.25rem + 4vw, 6.25rem);
 }
 .cs-flow > .cs-block + .cs-block {
-  margin-top: clamp(5rem, 3rem + 7vw, 11rem);
+  margin-top: clamp(3.5rem, 2.25rem + 4.5vw, 7.5rem);
 }
 .cs-flow > .cs-fig + .cs-fig {
   margin-top: var(--gap);
 }
 .cs-flow > .cs-fig:has(figcaption) + .cs-fig {
-  margin-top: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  margin-top: clamp(2rem, 1.25rem + 2.25vw, 3.5rem);
 }
 
 .cs-prose > * + * {
@@ -452,12 +493,12 @@
 @media (min-width: 1280px) {
   .section-rail {
     --rail-h: min(44vh, 24rem);
-    --x: 1rem; /* where the ruler line sits inside the hit area */
+    --x: 2rem; /* where the ruler line sits inside the hit area */
     display: block;
     position: fixed;
     z-index: 40;
     top: 50%;
-    left: max(0px, calc(max(var(--gutter), (100vw - var(--max)) / 2 + var(--gutter)) / 2 - 1.5rem));
+    right: max(0px, calc(max(var(--gutter), (100vw - var(--max)) / 2 + var(--gutter)) / 2 - 1rem));
     width: 3rem;
     height: var(--rail-h);
     margin-top: calc(var(--rail-h) / -2);
@@ -465,32 +506,19 @@
   }
   .section-rail:not([data-shown]):not(:focus-within) {
     opacity: 0;
-    translate: -0.5rem 0;
+    translate: 0.5rem 0;
     pointer-events: none;
   }
-  .section-rail::before,
-  .section-rail-fill {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: var(--x);
-    width: 1px;
-    height: 100%;
-    background: rgb(var(--line) / var(--line-alpha));
-  }
-  .section-rail-fill {
-    background: rgb(var(--fg-3));
-    transform: scaleY(var(--t, 0));
-    transform-origin: top;
-  }
+  /* Labels open to the left of the ruler, away from the left-aligned text */
   .section-rail li {
     position: absolute;
-    left: var(--x);
+    right: calc(100% - var(--x));
     top: calc(var(--k) * 100%);
     translate: 0 -50%;
   }
   .section-rail a {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     gap: 0.875rem;
     height: 1.75rem;
@@ -505,22 +533,25 @@
     color: rgb(var(--fg));
   }
   .section-rail-tick {
-    width: 0.5rem;
-    height: 1px;
+    flex: none;
+    width: 5px;
+    height: 5px;
+    margin-right: -2.5px; /* centre the dot on the ruler line */
+    border-radius: 50%;
     background: rgb(var(--fg-3));
-    transition: width var(--dur-base) var(--ease-out), background-color var(--dur-base) var(--ease-out);
+    transition: scale var(--dur-base) var(--ease-out), background-color var(--dur-base) var(--ease-out);
   }
   .section-rail a[data-passed] .section-rail-tick {
     background: rgb(var(--fg-2));
   }
   .section-rail a[aria-current] .section-rail-tick,
   .section-rail a:hover .section-rail-tick {
-    width: 1rem;
+    scale: 1.4;
     background: rgb(var(--fg));
   }
   .section-rail-label {
     opacity: 0;
-    translate: -0.375rem 0;
+    translate: 0.375rem 0;
     transition: opacity var(--dur-fast) var(--ease-out), translate var(--dur-base) var(--ease-out);
   }
   .section-rail a[aria-current] .section-rail-label {
@@ -532,9 +563,9 @@
     z-index: -1;
     top: -1.5rem;
     bottom: -1.5rem;
-    left: calc(var(--x) - 0.75rem);
-    /* room for the indent and heavier weight of the current label */
-    width: calc(var(--panel-w, 12rem) - var(--x) + 2.75rem);
+    right: calc(100% - var(--x) - 0.75rem);
+    /* label + gap + dot, with room for the heavier weight of the current label */
+    width: calc(var(--panel-w, 12rem) + 3.25rem);
     border-radius: var(--radius);
     background: rgb(var(--bg) / 0.94);
     -webkit-backdrop-filter: blur(16px);
@@ -554,14 +585,30 @@
     translate: 0 0;
   }
   .section-rail-caret {
+    /* quick start, long soft landing, no overshoot */
+    --glide: cubic-bezier(0.32, 0.72, 0, 1);
     position: absolute;
-    top: 0;
-    left: var(--x);
-    width: 1rem;
-    height: 3px;
+    left: calc(var(--x) - 4.5px);
+    width: 9px;
+    /* joins the dot at --a to the dot at --b */
+    top: calc(var(--a, 0) * 100% - 4.5px);
+    bottom: calc((1 - var(--b, 0)) * 100% - 4.5px);
+    border-radius: 999px;
     background: rgb(var(--accent));
-    transform: translateY(calc(var(--t, 0) * var(--rail-h) - 1.5px));
     pointer-events: none;
+    /* the leading end moves first, the trailing end follows just behind */
+    transition: top 400ms var(--glide) 40ms, bottom 340ms var(--glide);
+  }
+  .section-rail[data-dir="up"] .section-rail-caret {
+    transition: top 340ms var(--glide), bottom 400ms var(--glide) 40ms;
+  }
+  .section-rail[data-dir="jump"] .section-rail-caret {
+    transition: top 340ms var(--glide), bottom 340ms var(--glide);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .section-rail-caret {
+      transition: none !important;
+    }
   }
 }
 
@@ -652,5 +699,8 @@
   }
   .hero-roll-out {
     display: none;
+  }
+  .hero-mask {
+    --roll-lag: 0ms;
   }
 }

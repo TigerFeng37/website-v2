@@ -14,7 +14,7 @@ const REEL = [
   { make: "iOS apps", about: "about ghost stations", slug: "nyc-subway-archive" },
   { make: "typefaces", about: "for Web3 startups", slug: "aspecta" },
   { make: "creative tools", about: "for manga artists", slug: "pixstudio" },
-  { make: "identities", about: "for record labels", slug: "academy-records" },
+  { make: "identities", about: "for record shops", slug: "academy-records" },
   { make: "websites", about: "in 70 minutes", slug: "alt-site" },
   { make: "photographs", about: "of mountains", slug: "apex" },
 ]
@@ -25,10 +25,10 @@ const SLIDE_MS = 4600;
 // three.js mounts once the headline has risen in, so shader compile never stalls it.
 const SCENE_DELAY_MS = 650;
 
-// Landscape: a fixed distance. Portrait: back off until the view is ~6.4
+// Landscape: a fixed distance. Portrait: back off until the view is ~5.3
 // world units wide, so a phone sees the whole cluster, not two pieces of it.
 // (0.3078 = 2·tan(fov/2) for the 17.5° camera.)
-const heroDistance = (aspect) => (aspect >= 1 ? 20 : Math.min(6.4 / aspect / 0.3078, 46));
+const heroDistance = (aspect) => (aspect >= 1 ? 20 : Math.min(5.3 / aspect / 0.3078, 46));
 
 /* ---------- small hooks ---------- */
 
@@ -56,9 +56,9 @@ function usePageVisible() {
 
 /* ---------- pieces ---------- */
 
-const chars = (text, baseDelay) =>
+const chars = (text, baseDelay, step = 18) =>
   [...text].map((c, i) => (
-    <span key={i} className="hero-char" style={{ animationDelay: `${baseDelay + i * 18}ms` }}>
+    <span key={i} className="hero-char" style={{ "--d": `${baseDelay + i * step}ms` }}>
       {c === " " ? " " : c}
     </span>
   ));
@@ -71,8 +71,10 @@ function RollLine({ text, prevText, turn, delay = 0, className = "", children })
   return (
     <span className={`hero-mask ${className}`}>
       {prevText != null && prevText !== text ? (
+        // The old phrase leaves all at once, so no late letter is still in
+        // the way when the new phrase starts rising behind it.
         <span key={`out-${turn}`} className="hero-roll-out">
-          {chars(prevText, delay)}
+          {chars(prevText, delay, 0)}
         </span>
       ) : null}
       <span key={`in-${turn}`} className="hero-roll-in">
@@ -145,7 +147,7 @@ function Hero() {
     <section
       ref={heroRef}
       aria-labelledby="hero-title"
-      className="hero relative isolate flex h-[100svh] min-h-[36rem] flex-col overflow-hidden"
+      className="hero relative isolate flex h-[84svh] min-h-[34rem] md:h-[100svh] md:min-h-[36rem] flex-col overflow-hidden"
     >
       {/* The Hexaspires: stir them with the pointer, click to scatter. */}
       <div className="hero-scene absolute inset-0 -z-20" aria-hidden>
@@ -157,7 +159,8 @@ function Hero() {
             eventSource={heroRef}
             lite={small || !finePointer}
             distance={heroDistance}
-            gather={(w, h) => (w > h ? [w * 0.17, h * 0.12] : [-w * 0.06, h * 0.24])}
+            gather={(w, h) => (w > h ? [w * 0.08, h * 0.06] : [0, h * 0.24])}
+            scatter={small ? 0.5 : 1}
             onScatter={() => setScattered(true)}
           />
         ) : null}
@@ -172,7 +175,7 @@ function Hero() {
             typefaces, creative tools, identities, websites and photographs.
           </span>
           <span aria-hidden className="block">
-            <span className="block whitespace-nowrap text-fg-2">
+            <span className={`block whitespace-nowrap ${theme === "light" ? "text-fg-3" : "text-fg-2"}`}>
               {"I make".split(" ").map((w, i) => (
                 <Fragment key={w}>
                   <span className="hero-word" style={{ "--i": i }}>
@@ -195,6 +198,7 @@ function Hero() {
                       key={it.slug}
                       src={it.project.thumb ?? it.project.hero}
                       poster={it.project.poster}
+                      loop={it.project.loop}
                       priority
                       playing={i === reel.index && inView && pageVisible}
                       className={`!absolute inset-0 !rounded-none transition-opacity duration-slow ${
@@ -219,8 +223,7 @@ function Hero() {
 
         <div className="grid-12 mt-8 items-end gap-y-6 md:mt-12">
           <p className="hero-fact col-span-12 max-w-[34ch] text-fg-2 md:col-span-5 lg:col-span-4" style={{ "--i": 0 }}>
-            <span className="text-fg">Feng Works</span> is the one-person studio of Yicheng Feng,
-            designer and creative technologist.
+            <span className="text-fg">Feng Works / Yicheng Feng</span> is designer and creative technologist based in New York City.
           </p>
 
           {/* Now showing: the project behind the current line. */}

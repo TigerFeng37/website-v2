@@ -11,21 +11,20 @@ const EXPERIENCE = [
     role: "Product Design Consultant",
     org: "Mewtant",
     note: "Contract",
-    body: "Worked on the first design system and the UI of upcoming products, including PixStudio, at a Singapore company making AI creative tools.",
+    body: "Worked on the first design system and the UI of upcoming products, including PixStudio, at a Singapore company making AI creative tools. Shipped 100+ UI components for a web-based AI graphic novel product across two closed betas, and led branding and UI for an LLM companion app aimed at audiences in Japan and East Asia, supporting its React Native build.",
     link: "/works/pixstudio",
   },
   {
     years: "2022 — now",
     role: "Co-Founder",
     org: "Fusor Design Labs",
-    note: "On hiatus",
-    body: "A project-based studio where I lead UI/UX, brand identity and typeface design, mostly for tech clients.",
+    body: "A project-based studio where I lead UI/UX, brand identity and typeface design for 20+ startups across technology and commodities, and build their websites in React, TypeScript and Next.js.",
   },
   {
     years: "2021 — 2022",
-    role: "Senior Designer (Interim)",
+    role: "Design Lead",
     org: "X Academy",
-    body: "Generalist designer at a tech and education company: mostly web app UI/UX, plus print and social campaigns.",
+    body: "Generalist designer at a tech and education company: mostly web app UI/UX, plus print and social campaigns, one of which reached 1M+ impressions. I also designed and built the official site in React, which raised average time on site by 20%.",
   },
 ];
 
@@ -42,6 +41,12 @@ const AWARDS = [
     title: "Global Top 15%, Cyber Apocalypse CTF",
     issuer: "HackTheBox",
     body: "A five-day online CTF for a good cause: for every challenge with at least one solve, Hack The Box donated to Code.org.",
+  },
+  {
+    date: "2021",
+    title: "Silver A' Design Award, Photography",
+    issuer: "A' Design Award",
+    body: "Photography and Photo Manipulation.",
   },
   {
     date: "Jun 2019",
@@ -71,14 +76,15 @@ const AWARDS = [
 ];
 
 const CAPABILITIES = {
-  Creative: ["Brand identity", "UI/UX design", "Typography", "Photography", "Music production"],
-  Technical: ["Figma / Sketch", "Adobe Creative Suite", "Affinity Suite", "Front-end development", "DaVinci Resolve"],
+  Design: ["Brand identity", "Product design", "UI/UX design", "Interaction design", "Design systems", "Figma / Sketch"],
+  Build: ["React / TypeScript", "Next.js / Vite", "Tailwind CSS", "Three.js",],
+  Craft: ["Motion (Rive, After Effects)", "3D (Blender, Cinema 4D)", "Photography", "Music production", "DaVinci Resolve"],
 };
 
 /** Label on the left, content on the right, hairline above. */
 function Block({ title, children }) {
   return (
-    <section className="wrap mt-[clamp(5rem,3rem+6vw,9rem)]" data-reveal>
+    <section className="wrap mt-[clamp(3rem,2rem+3vw,5rem)]" data-reveal>
       <div className="grid-12 rule gap-y-6 pt-6">
         <h2 className="col-span-12 text-h3 md:col-span-4">{title}</h2>
         <div className="col-span-12 md:col-span-8">{children}</div>
@@ -130,14 +136,15 @@ function AboutPage() {
           className="intro-line aspect-[4/5] sm:aspect-[16/9] md:aspect-[21/9]"
           position="50% 58%"
         />
+        <p class="my-2">The Hexaspire<span class="text-gray-500"> – made with Blender</span></p>
       </div>
 
       <Block title="Who I am">
         <div className="cs-prose">
           <p>
-            Four-plus years in <strong>brand identity, UI/UX and design systems</strong>, with
-            experimental projects on the side. I studied <strong>Communication Design (BFA)</strong> at
-            Parsons School of Design.
+            A designer who also builds. Four-plus years in{" "}
+            <strong>brand identity, product design, UI/UX and design systems</strong>, with experimental projects on the side. I studied{" "}
+            <strong>Communication Design (BFA)</strong> at Parsons School of Design.
           </p>
         </div>
       </Block>
@@ -148,11 +155,15 @@ function AboutPage() {
             I prototype early, in the real medium and usually in code, so ideas get judged on
             something that works rather than a mockup.
           </p>
+          <p>
+            I treat a design system as the shared language between design and engineering. I craft designs with <strong>Figma + React</strong>, so what ships matches
+            what was designed and the handoff stays minimal.
+          </p>
         </div>
       </Block>
 
       <Block title="What I can do">
-        <div className="grid grid-cols-2 gap-x-gap">
+        <div className="grid grid-cols-2 gap-x-gap gap-y-10 sm:grid-cols-3">
           {Object.entries(CAPABILITIES).map(([group, items]) => (
             <div key={group}>
               <h3 className="text-fg-2">{group}</h3>
@@ -192,14 +203,14 @@ function AboutPage() {
         </ol>
       </Block>
 
-      <Block title="This site">
+      {/* <Block title="This site">
         <div className="cs-prose">
           <p>
             Hand-built in React, Three.js and Tailwind CSS. Set in Mona Sans, hosted on Cloudflare
             Pages.
           </p>
         </div>
-      </Block>
+      </Block> */}
     </div>
   );
 }

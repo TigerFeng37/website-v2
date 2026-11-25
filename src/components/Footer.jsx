@@ -133,7 +133,8 @@ function Footer() {
               </li>
             </ul>
           </Column>
-          <Column title="New York">
+          <Column title="Timezone">
+            <p className="font-medium">New York City</p>
             <p className="tabular-nums">{time}</p>
           </Column>
           <Column title="Appearance">

@@ -85,6 +85,7 @@ function CaseStudy({ slug, lead, facts = [], links = [], hero, children }) {
           placeholder={project.poster ?? (project.thumb !== project.hero ? project.thumb : undefined)}
           alt={hero?.alt ?? ""}
           label={hero?.label}
+          loop={project.loop}
           position={hero?.position}
           vt={`media-${slug}`}
           priority
@@ -101,7 +102,7 @@ function CaseStudy({ slug, lead, facts = [], links = [], hero, children }) {
 
 function NextProject({ project }) {
   return (
-    <nav aria-label="Next project" data-toc="Next project" className="wrap mt-section">
+    <nav aria-label="Next project" data-toc="Next project" className="wrap mt-[clamp(4.5rem,3rem+5vw,8.5rem)]">
       <Link to={`/works/${project.slug}`} viewTransition className="card group grid-12 rule gap-y-6 pt-6">
         <div className="col-span-12 md:col-span-7">
           <p className="text-fg-2">Next project</p>
@@ -118,6 +119,7 @@ function NextProject({ project }) {
           <Media
             src={project.thumb ?? project.hero}
             poster={project.poster}
+            loop={project.loop}
             vt={`media-${project.slug}`}
             className="aspect-[4/3]"
           />

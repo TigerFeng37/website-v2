@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CATEGORIES, inProgress, projects } from "../../data/projects";
 import WorkGrid from "./WorkGrid";
 import WorkIndex from "./WorkIndex";
@@ -67,9 +67,44 @@ function Work() {
   const pending = filter === "All" || filter === "Product" ? inProgress : [];
   const View = view === "Index" ? WorkIndex : WorkGrid;
 
+  // A zero-height marker holds the bar's natural place; once the bar sits
+  // lower than the marker, sticky positioning has taken over and it is pinned.
+  const sentinel = useRef(null);
+  const bar = useRef(null);
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      if (!sentinel.current || !bar.current) return;
+      const gap = bar.current.getBoundingClientRect().top - sentinel.current.getBoundingClientRect().top;
+      setStuck(gap > 1);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    // The pinned offset animates when the header hides or returns.
+    bar.current?.addEventListener("transitionend", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <section id="work" aria-labelledby="work-title" className="wrap">
-      <div className="rule mb-10 grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-5 pt-6 md:mb-16 md:flex md:justify-between">
+      <div ref={sentinel} aria-hidden className="h-0" />
+      <div
+        ref={bar}
+        className={`work-bar rule sticky z-30 mb-6 grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-5 pb-4 pt-6 md:mb-12 md:flex md:justify-between ${
+          stuck ? "is-stuck" : ""
+        }`}
+      >
+        <div aria-hidden className="work-bar-bg" />
         <h2 id="work-title" className="text-h2">
           Selected work
         </h2>

@@ -59,6 +59,7 @@ function CursorPreview({ items, active }) {
               key={p.slug}
               src={p.thumb ?? p.hero}
               poster={p.poster}
+              loop={p.loop}
               priority
               playing={active === p.slug}
               className={`!absolute inset-0 transition-opacity duration-base ${

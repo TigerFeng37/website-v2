@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 // heading passes this fraction of the viewport height.
 const ANCHOR = 0.35;
 
+// How far through a section (0–1) the caret stays a dot before it stretches
+// into a pill reaching the next section's dot.
+const SNAP = 0.4;
+
 const slugify = (s) =>
   s
     .toLowerCase()
@@ -11,11 +15,12 @@ const slugify = (s) =>
     .replace(/^-|-$/g, "");
 
 /**
- * A ruler in the left margin of a case study (wide screens only).
+ * A ruler in the right margin of a case study (wide screens only).
  *
- * One tick per section, evenly spaced; the caret slides down the ruler as you
- * read, moving between ticks in proportion to how far through each section you
- * are. Labels stay hidden until you point at (or tab into) the ruler.
+ * One dot per section, evenly spaced. The caret sits as a dot on the section
+ * you're in, stretches into a pill reaching the next dot once you're partway
+ * through, and gathers into that dot when you get there. Labels stay hidden
+ * until you point at (or tab into) the ruler.
  *
  * Sections are found in the DOM: anything marked `data-toc="Label"`, plus every
  * h2 in the case-study body.
@@ -53,6 +58,8 @@ function SectionRail({ rootRef, slug }) {
     let tops = [];
     let frame = 0;
     let last = -1;
+    let shape = [-1, -1];
+    let stepAt = -Infinity;
 
     const update = () => {
       frame = 0;
@@ -63,11 +70,31 @@ function SectionRail({ rootRef, slug }) {
         if (y < tops[i]) break;
         v = i === n - 1 ? i : i + Math.min(1, (y - tops[i]) / (tops[i + 1] - tops[i]));
       }
-      rail.style.setProperty("--t", (v / (n - 1)).toFixed(4));
       const idx = Math.min(n - 1, Math.floor(v + 0.001));
       if (idx !== last) {
         last = idx;
         setActive(idx);
+      }
+
+      // The caret rests as a dot on the section you're in. Once you're SNAP of
+      // the way through, it stretches into a pill reaching the next dot; on
+      // entering that section it gathers back into a dot there.
+      const a = idx;
+      const b = idx < n - 1 && v - idx >= SNAP ? idx + 1 : idx;
+      if (a !== shape[0] || b !== shape[1]) {
+        if (shape[0] !== -1) {
+          // Skipping sections, or changing again before the last change has
+          // settled (fast scrolling), slides the caret as one piece so it
+          // never stretches across more than two dots.
+          const now = performance.now();
+          const far = Math.max(Math.abs(a - shape[0]), Math.abs(b - shape[1])) > 1;
+          const rigid = far || now - stepAt < 420;
+          stepAt = now;
+          rail.dataset.dir = rigid ? "jump" : a + b > shape[0] + shape[1] ? "down" : "up";
+        }
+        shape = [a, b];
+        rail.style.setProperty("--a", (a / (n - 1)).toFixed(4));
+        rail.style.setProperty("--b", (b / (n - 1)).toFixed(4));
       }
       const footer = document.getElementById("contact");
       setShown(
@@ -116,7 +143,7 @@ function SectionRail({ rootRef, slug }) {
   useEffect(() => {
     const rail = railRef.current;
     if (!rail) return;
-    const widest = Math.max(0, ...[...rail.querySelectorAll(".section-rail-label")].map((l) => l.offsetLeft + l.offsetWidth));
+    const widest = Math.max(0, ...[...rail.querySelectorAll(".section-rail-label")].map((l) => l.offsetWidth));
     rail.style.setProperty("--panel-w", `${Math.ceil(widest)}px`);
   }, [items]);
 
@@ -131,7 +158,6 @@ function SectionRail({ rootRef, slug }) {
       data-shown={shown || undefined}
     >
       <span aria-hidden className="section-rail-panel" />
-      <span aria-hidden className="section-rail-fill" />
       <ol>
         {items.map((item, i) => (
           <li key={item.id} style={{ "--k": i / (n - 1) }}>

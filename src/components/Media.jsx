@@ -8,6 +8,7 @@ const isVideo = (src) => /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(src ?? ""))
  *
  * - Videos are muted loops that only play while on screen (and never under
  *   reduced motion), and don't download until they're close to the viewport.
+ *   `loop={false}` plays once and holds the last frame.
  * - Images fade in once decoded so nothing pops.
  * - `vt` sets a view-transition-name so a card can morph into a case-study hero.
  * - `placeholder` paints an already-cached image underneath while loading.
@@ -77,12 +78,15 @@ function Media({
     const v = videoRef.current;
     if (!v || controls) return;
     if (shouldPlay) {
+      // A one-shot that has finished holds its last frame when scrolled back
+      // into view; explicitly driven previews (hover, reel) replay it instead.
+      if (!loop && v.ended && playing === undefined) return;
       const p = v.play();
       p?.catch?.(() => {});
     } else {
       v.pause();
     }
-  }, [shouldPlay, controls]);
+  }, [shouldPlay, controls, loop, playing]);
 
   const style = {
     ...(aspect ? { aspectRatio: aspect } : null),

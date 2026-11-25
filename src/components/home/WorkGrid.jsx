@@ -68,6 +68,7 @@ function ProjectCard({ project, ar, share, size, col, compact }) {
         <Media
           src={project.thumb ?? project.hero}
           poster={project.poster}
+          loop={project.loop}
           alt=""
           className="aspect-[4/3] md:aspect-[var(--ar)]"
           vt={`media-${project.slug}`}

@@ -12,7 +12,8 @@ function PhotoFengWorksPage() {
     <CaseStudy
       slug="photos-by-feng"
       hero={{
-        alt: "Black and white street scene through a window, SUV and pedestrians, with the Photos by Feng mark centered",
+        label:
+          "A dot drops onto a row of index ticks; the tallest tick bends into the Photos by Feng mark, a twisted four-point star drawn in white line, which settles above the wordmark as \u201cstreet photography index, archival \u00b7 experimental\u201d types on.",
       }}
       facts={[
         { label: "Client", value: "Personal" },
